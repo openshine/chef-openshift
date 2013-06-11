@@ -1,1 +1,12 @@
-# This is my README
+Description
+===========
+
+Requirements
+============
+
+Attributes
+==========
+
+Usage
+=====
+
