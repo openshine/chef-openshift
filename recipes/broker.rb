@@ -20,3 +20,4 @@
 include_recipe "ntp"
 include_recipe "openshift::broker_named"
 include_recipe "openshift::broker_mongodb"
+include_recipe "openshift::broker_messaging"
