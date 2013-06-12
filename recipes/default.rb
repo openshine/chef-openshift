@@ -19,7 +19,7 @@
 
 case node["platform"]
 when "redhat","centos","fedora"
-  include_recipe "yum::epel"
+  include_recipe "yum"
 
   #Check firewall system
   if File.exists?("/usr/bin/firewall-cmd")
@@ -28,6 +28,18 @@ when "redhat","centos","fedora"
   elsif File.exists?("/usr/sbin/lokkit")
     node.set["openshift"]["firewall"]["add_service"] = "/usr/sbin/lokkit --service="
     node.set["openshift"]["firewall"]["add_port"] = "/usr/sbin/lokkit --port="
+  end
+
+  #Register yum repositories
+  yum_repository "openshift" do
+    description "openshift"
+    case node["platform"]
+    when "fedora"
+      url "https://mirror.openshift.com/pub/origin-server/fedora-$releasever/$basearch/"
+    when "centos", "redhat"
+      url "https://mirror.openshift.com/pub/origin-server/rhel-$releasever/$basearch/"
+    end
+    action platform?('amazon') ? [:add, :update] : :add
   end
 
   if node["openshift"]["broker"]["enable"]
