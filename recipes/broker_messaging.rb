@@ -96,4 +96,10 @@ when "activemq"
       command "#{FW_ADD_PORT_CMD}61613:tcp"
     end
   end
+
+  service "activemq" do
+    supports :status => true, :restart => true, :reload => true
+    action [ :enable, :start ]
+  end
+
 end
