@@ -26,9 +26,14 @@ when "qpid"
   package "mcollective-qpid-plugin"
   package "qpid-cpp-server"
 
-  execute "Enable dns firewall" do
+  execute "Enable qpid firewall" do
     cwd "/etc"
-    command "#{FW_ADD_PORT_CMD}5672/tcp"
+    case node.set["openshift"]["firewall"]["provider"]
+    when "firewalld"
+      command "#{FW_ADD_PORT_CMD}5672/tcp"
+    when "lokkit"
+      command "#{FW_ADD_PORT_CMD}5672:tcp"
+    end
   end
 
   service "qpidd" do
@@ -82,4 +87,13 @@ when "activemq"
     variables({:mq_server_password => node["openshift"]["messaging"]["server"]["password"]})
   end
 
+  execute "Enable activemq firewall" do
+    cwd "/etc"
+    case node.set["openshift"]["firewall"]["provider"]
+    when "firewalld"
+      command "#{FW_ADD_PORT_CMD}61613/tcp"
+    when "lokkit"
+      command "#{FW_ADD_PORT_CMD}61613:tcp"
+    end
+  end
 end
