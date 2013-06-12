@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: openshift
-# Recipe:: mongodb
+# Recipe:: broker_mongodb
 #
 # Copyright 2013, Openshine S.L.
 #

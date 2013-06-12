@@ -18,5 +18,5 @@
 #
 
 include_recipe "ntp"
-include_recipe "openshift::named"
-include_recipe "openshift::mongodb"
+include_recipe "openshift::broker_named"
+include_recipe "openshift::broker_mongodb"

@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: openshift
-# Recipe:: named
+# Recipe:: broker_named
 #
 # Copyright 2013, Openshine S.L.
 #
