@@ -19,7 +19,7 @@
 
 case node["platform"]
 when "redhat","centos","fedora"
-  include_recipe "yum"
+  include_recipe "yum::epel"
 
   #Check firewall system
   if File.exists?("/usr/bin/firewall-cmd")
