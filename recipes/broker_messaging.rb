@@ -103,3 +103,18 @@ when "activemq"
   end
 
 end
+
+package "mcollective-client"
+
+template "/etc/mcollective/client.cfg" do
+  source "mcollective-client-cfg.erb"
+  mode 0755
+  owner "root"
+  group "root"
+  variables({ :platform => node["platform"],
+              :mq_provider => node["openshift"]["messaging"]["provider"],
+              :mq_fqdn => "broker.#{OPENSHIFT_DOMAIN}",
+              :mq_server_user => node["openshift"]["messaging"]["server"]["user"],
+              :mq_server_password => node["openshift"]["messaging"]["server"]["password"]
+            })
+end
