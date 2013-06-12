@@ -19,3 +19,4 @@
 
 include_recipe "ntp"
 include_recipe "openshift::named"
+include_recipe "openshift::mongodb"
