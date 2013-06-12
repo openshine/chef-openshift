@@ -44,6 +44,17 @@ when "redhat","centos","fedora"
     action platform?('amazon') ? [:add, :update] : :add
   end
 
+  yum_repository "openshift-nightly" do
+    description "openshift nightly"
+    case node["platform"]
+    when "fedora"
+      url "https://mirror.openshift.com/pub/origin-server/nightly/fedora-$releasever/latest/$basearch/"
+    when "centos", "redhat"
+      url "https://mirror.openshift.com/pub/origin-server/nightly/rhel-$releasever/latest/$basearch/"
+    end
+    action platform?('amazon') ? [:add, :update] : :add
+  end
+
   if node["openshift"]["broker"]["enable"]
     include_recipe "openshift::broker"
   end
