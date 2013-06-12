@@ -5,6 +5,11 @@ license          "Apache 2.0"
 description      "Installs/Configures openshift"
 
 version          "0.0.1"
+
+%w{ yum ntp }.each do |dep|
+  depends dep
+end
+
 %w{ redhat fedora }.each do |os|
     supports os
 end
