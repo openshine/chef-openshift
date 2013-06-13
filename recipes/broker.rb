@@ -65,3 +65,13 @@ execute "Enable https firewall" do
   cwd "/var/named"
   command "#{FW_ADD_SERVICE_CMD}https"
 end
+
+service "httpd" do
+  supports :status => true, :restart => true, :reload => true
+  action [ :enable, :start ]
+end
+
+service "openshift-broker" do
+  supports :status => true, :restart => true, :reload => true
+  action [ :enable, :start ]
+end
