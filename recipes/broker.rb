@@ -30,3 +30,5 @@ include_recipe "openshift::broker_messaging"
 
   package "#{pkg}"
 end
+
+include_recipe "openshift::broker_security"
