@@ -41,8 +41,10 @@ when "qpid"
     action [ :enable, :start ]
   end
 when "activemq"
-  package "activemq"
-  package "activemq-client"
+  include_recipe "activemq"
+
+  version = node['activemq']['version']
+  activemq_confdir = "#{node['activemq']['home']}/apache-activemq-#{version}/conf/"
 
   case node["platform"]
   when "fedora"
@@ -61,7 +63,7 @@ when "activemq"
     action :create
   end
 
-  template "/etc/activemq/activemq.xml" do
+  template "#{activemq_confdir}/activemq.xml" do
     source "activemq/activemq.xml.erb"
     mode 0444
     owner "root"
@@ -72,14 +74,14 @@ when "activemq"
               })
   end
 
-  template "/etc/activemq/jetty.xml" do
+  template "#{activemq_confdir}/jetty.xml" do
     source "activemq/jetty.xml.erb"
     mode 0444
     owner "root"
     group "root"
   end
 
-  template "/etc/activemq/jetty-realm.properties" do
+  template "#{activemq_confdir}/jetty-realm.properties" do
     source "activemq/jetty-realm.properties.erb"
     mode 0444
     owner "root"

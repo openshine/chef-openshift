@@ -6,7 +6,7 @@ description      "Installs/Configures openshift"
 
 version          "0.0.1"
 
-%w{ yum ntp }.each do |dep|
+%w{ yum ntp activemq }.each do |dep|
   depends dep
 end
 
