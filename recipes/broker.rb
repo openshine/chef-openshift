@@ -33,3 +33,23 @@ end
 
 include_recipe "openshift::broker_security"
 include_recipe "openshift::broker_config"
+
+if node["platform"] == "fedora" and node["platform_version"] == "18"
+  package "libyaml-devel"
+  gem_package "psych"
+  gem_package "minitest" do
+    version "3.2.0"
+    action :install
+  end
+else
+  package "rubygem-psych"
+end
+
+gem_package "mongoid"
+gem_package "mocha"
+
+execute "Bundle broker install" do
+  cwd "/var/www/openshift/broker"
+  user "root"
+  command "bundle --local"
+end
