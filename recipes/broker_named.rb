@@ -44,7 +44,7 @@ file "/etc/rndc.key" do
 end
 
 template "/var/named/forwarders.conf" do
-  source "named_forwarders.conf.erb"
+  source "named/forwarders.conf.erb"
   mode 0755
   owner "named"
   group "named"
@@ -52,7 +52,7 @@ template "/var/named/forwarders.conf" do
 end
 
 template "/var/named/dynamic/#{OPENSHIFT_DOMAIN}.db" do
-  source "named_dynamic-domain.db.erb"
+  source "named/dynamic-domain.db.erb"
   mode 0755
   owner "named"
   group "named"
@@ -70,7 +70,7 @@ ruby_block "create /var/named/#{OPENSHIFT_DOMAIN}.key template" do
     end
 
     res = Chef::Resource::Template.new "/var/named/#{OPENSHIFT_DOMAIN}.key", run_context
-    res.source "named_domain-key.erb"
+    res.source "named/domain-key.erb"
     res.owner "named"
     res.group "named"
     res.mode "750"
@@ -83,7 +83,7 @@ ruby_block "create /var/named/#{OPENSHIFT_DOMAIN}.key template" do
 end
 
 template "/etc/named.conf" do
-  source "named_named.conf.erb"
+  source "named/named.conf.erb"
   mode 0755
   owner "root"
   group "named"
