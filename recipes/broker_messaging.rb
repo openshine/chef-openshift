@@ -20,7 +20,6 @@
 OPENSHIFT_DOMAIN = node["openshift"]["domain"]
 FW_ADD_PORT_CMD = node["openshift"]["firewall"]["add_port"]
 
- 
 case node["openshift"]["messaging"]["provider"]
 when "qpid"
   package "mcollective-qpid-plugin"
@@ -41,10 +40,16 @@ when "qpid"
     action [ :enable, :start ]
   end
 when "activemq"
-  include_recipe "activemq"
+  case node["openshift"]["messaging"]["server"]["install_method"]
+  when "pkg"
+    package "activemq"
+    activemq_confdir = "/etc/activemq"
+  when "source"
+    include_recipe "activemq"
 
-  version = node['activemq']['version']
-  activemq_confdir = "#{node['activemq']['home']}/apache-activemq-#{version}/conf/"
+    version = node['activemq']['version']
+    activemq_confdir = "#{node['activemq']['home']}/apache-activemq-#{version}/conf"
+  end
 
   case node["platform"]
   when "fedora"

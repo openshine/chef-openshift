@@ -14,3 +14,6 @@ default["openshift"]["named"]["forwarders"] = ["8.8.8.8", "8.8.4.4"]
 default["openshift"]["messaging"]["provider"] = "activemq"
 default["openshift"]["messaging"]["server"]["user"] = "mcollective"
 default["openshift"]["messaging"]["server"]["password"] = "marionette"
+default["openshift"]["messaging"]["server"]["install_method"] = "pkg"
+
+
