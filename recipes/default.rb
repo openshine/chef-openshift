@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+OPENSHIFT_DOMAIN = node["openshift"]["domain"]
+
 case node["platform"]
 when "redhat","centos","fedora"
   include_recipe "yum"
@@ -56,6 +58,13 @@ when "redhat","centos","fedora"
   # end
 
   if node["openshift"]["broker"]["enable"]
+    ip = node["ipaddress"]
+    hostsfile_entry "#{ip}" do
+      hostname "broker.#{OPENSHIFT_DOMAIN}"
+      comment   "openshift broker domain"
+      action    :create_if_missing
+    end
+
     include_recipe "openshift::broker"
   end
 
