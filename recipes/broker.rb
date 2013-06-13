@@ -21,3 +21,12 @@ include_recipe "ntp"
 include_recipe "openshift::broker_named"
 include_recipe "openshift::broker_mongodb"
 include_recipe "openshift::broker_messaging"
+
+%w{openshift-origin-broker
+   openshift-origin-broker-util
+   rubygem-openshift-origin-auth-remote-user
+   rubygem-openshift-origin-msg-broker-mcollective
+   rubygem-openshift-origin-dns-bind}.each do |pkg|
+
+  package "#{pkg}"
+end
