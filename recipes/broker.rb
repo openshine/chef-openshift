@@ -32,3 +32,4 @@ include_recipe "openshift::broker_messaging"
 end
 
 include_recipe "openshift::broker_security"
+include_recipe "openshift::broker_config"
