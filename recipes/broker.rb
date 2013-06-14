@@ -17,8 +17,6 @@
 # limitations under the License.
 #
 
-FW_ADD_SERVICE_CMD = node["openshift"]["firewall"]["add_service"]
-
 include_recipe "ntp"
 include_recipe "openshift::broker_named"
 include_recipe "openshift::broker_mongodb"
@@ -56,14 +54,16 @@ execute "Bundle broker install" do
   command "bundle --local"
 end
 
-execute "Enable http firewall" do
-  cwd "/var/named"
-  command "#{FW_ADD_SERVICE_CMD}http"
+openshift_fwd "Enable http firewall" do
+  type "service"
+  service "http"
+  action :add
 end
 
-execute "Enable https firewall" do
-  cwd "/var/named"
-  command "#{FW_ADD_SERVICE_CMD}https"
+openshift_fwd "Enable https firewall" do
+  type "service"
+  service "https"
+  action :add
 end
 
 service "httpd" do

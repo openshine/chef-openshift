@@ -23,17 +23,6 @@ case node["platform"]
 when "redhat","centos","fedora"
   include_recipe "yum"
 
-  #Check firewall system
-  if File.exists?("/usr/bin/firewall-cmd")
-    node.set["openshift"]["firewall"]["provider"] = "firewalld"
-    node.set["openshift"]["firewall"]["add_service"] = "/usr/bin/firewall-cmd --permanent --zone=public --add-service="
-    node.set["openshift"]["firewall"]["add_port"] = "/usr/bin/firewall-cmd --permanent --zone=public --add-port="
-  elsif File.exists?("/usr/sbin/lokkit")
-    node.set["openshift"]["firewall"]["provider"] = "lokkit"
-    node.set["openshift"]["firewall"]["add_service"] = "/usr/sbin/lokkit --service="
-    node.set["openshift"]["firewall"]["add_port"] = "/usr/sbin/lokkit --port="
-  end
-
   #Register yum repositories
   # yum_repository "openshift" do
   #   description "openshift"

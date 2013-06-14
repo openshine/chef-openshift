@@ -18,21 +18,17 @@
 #
 
 OPENSHIFT_DOMAIN = node["openshift"]["domain"]
-FW_ADD_PORT_CMD = node["openshift"]["firewall"]["add_port"]
 
 case node["openshift"]["messaging"]["provider"]
 when "qpid"
   package "mcollective-qpid-plugin"
   package "qpid-cpp-server"
 
-  execute "Enable qpid firewall" do
-    cwd "/etc"
-    case node.set["openshift"]["firewall"]["provider"]
-    when "firewalld"
-      command "#{FW_ADD_PORT_CMD}5672/tcp"
-    when "lokkit"
-      command "#{FW_ADD_PORT_CMD}5672:tcp"
-    end
+  openshift_fwd "Enable qpid firewall" do
+    type "port"
+    port 5672
+    protocol "tcp"
+    action :add
   end
 
   service "qpidd" do
@@ -92,6 +88,13 @@ when "activemq"
     owner "root"
     group "root"
     variables({:mq_server_password => node["openshift"]["messaging"]["server"]["password"]})
+  end
+
+  openshift_fwd "Enable activemq firewall" do
+    type "port"
+    port 61613
+    protocol "tcp"
+    action :add
   end
 
   execute "Enable activemq firewall" do

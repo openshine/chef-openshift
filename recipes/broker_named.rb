@@ -18,7 +18,6 @@
 #
 
 OPENSHIFT_DOMAIN = node["openshift"]["domain"]
-FW_ADD_SERVICE_CMD = node["openshift"]["firewall"]["add_service"]
 
 package "bind"
 package "bind-utils"
@@ -90,9 +89,10 @@ template "/etc/named.conf" do
   variables({ :domain => "#{OPENSHIFT_DOMAIN}" })
 end
 
-execute "Enable dns firewall" do
-  cwd "/var/named"
-  command "#{FW_ADD_SERVICE_CMD}dns"
+openshift_fwd "Enable dns firewall" do
+  type "service"
+  service "dns"
+  action :add
 end
 
 service "named" do

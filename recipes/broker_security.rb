@@ -17,16 +17,15 @@
 # limitations under the License.
 #
 
-FW_ADD_SERVICE_CMD = node["openshift"]["firewall"]["add_service"]
-
 service "sshd" do
   supports :status => true, :restart => true, :reload => true
   action [ :enable, :start ]
 end
 
-execute "Enable ssh firewall" do
-  cwd "/var/named"
-  command "#{FW_ADD_SERVICE_CMD}ssh"
+openshift_fwd "Enable ssh firewall" do
+  type "service"
+  service "ssh"
+  action :add
 end
 
 #Ssl certs
