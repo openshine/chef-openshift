@@ -54,18 +54,6 @@ execute "Bundle broker install" do
   command "bundle --local"
 end
 
-openshift_fwd "Enable http firewall" do
-  type "service"
-  service "http"
-  action :add
-end
-
-openshift_fwd "Enable https firewall" do
-  type "service"
-  service "https"
-  action :add
-end
-
 service "httpd" do
   supports :status => true, :restart => true, :reload => true
   action [ :enable, :start ]

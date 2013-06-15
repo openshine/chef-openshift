@@ -28,6 +28,18 @@ openshift_fwd "Enable ssh firewall" do
   action :add
 end
 
+openshift_fwd "Enable http firewall" do
+  type "service"
+  service "http"
+  action :add
+end
+
+openshift_fwd "Enable https firewall" do
+  type "service"
+  service "https"
+  action :add
+end
+
 #Ssl certs
 execute "generate ssl private key" do
    cwd "/etc/openshift"
