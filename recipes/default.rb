@@ -51,11 +51,10 @@ when "redhat","centos","fedora"
   # end
 
   if node["openshift"]["broker"]["enable"]
-    ip = node["ipaddress"]
-    hostsfile_entry "#{OPENSHIFT_BROKER_IP}" do
+    hostsfile_entry "#{OPENSHIFT_NODE_IP}" do
       hostname "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}"
-      comment   "openshift broker domain"
-      action    :create_if_missing
+      comment "openshift broker"
+      action    :append
     end
 
     include_recipe "openshift::broker"
