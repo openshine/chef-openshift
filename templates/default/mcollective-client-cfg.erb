@@ -8,7 +8,7 @@ libdir = /usr/libexec/mcollective
 libdir = /opt/rh/ruby193/root/usr/libexec/mcollective
 <%end%>
 loglevel = debug
-direct_addressing = 1
+logfile = /var/log/mcollective-client.log
 
 # Plugins
 securityprovider = psk
@@ -28,3 +28,7 @@ plugin.qpid.host=<%= @mq_fqdn %>
 plugin.qpid.secure=false
 plugin.qpid.timeout=5
 <%  end %>
+
+# Facts
+factsource = yaml
+plugin.yaml = /etc/mcollective/facts.yaml
