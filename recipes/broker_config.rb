@@ -22,7 +22,7 @@ OPENSHIFT_DOMAIN = node["openshift"]["domain"]
 #Tweak /etc/openshift/broker.conf
 ruby_block 'Tweak /etc/openshift/broker.conf' do
   block do
-    f = Chef::Util::FileEdit.new('/etc/openshift/broker.conf')
+    f = Chef::Util::FileEdit.new('etc/openshift/broker.conf')
     f.search_file_replace("^CLOUD_DOMAIN *=.*$", "CLOUD_DOMAIN=\"#{OPENSHIFT_DOMAIN}\"")
     f.search_file_replace("^VALID_GEAR_SIZES *=.*$", "VALID_GEAR_SIZES=\"small,medium\"")
     f.write_file
