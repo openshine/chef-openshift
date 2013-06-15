@@ -20,7 +20,11 @@ Vagrant.configure("2") do |config|
         :broker => {
           :ipaddress => "34.33.33.10",
           :hostname  => "mybroker"
-        }
+        },
+	:node => {
+          :ipaddress => "34.33.33.10",
+          :hostname  => "mynode1"
+	}
       }
     }
   end
