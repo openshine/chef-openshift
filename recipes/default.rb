@@ -20,6 +20,8 @@
 OPENSHIFT_DOMAIN = node["openshift"]["domain"]
 OPENSHIFT_BROKER_IP = node["openshift"]["broker"]["ipaddress"] == "" ? node["ipaddress"] : node["openshift"]["broker"]["ipaddress"]
 OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
+OPENSHIFT_NODE_IP = node["openshift"]["node"]["ipaddress"] == "" ? node["ipaddress"] : node["openshift"]["node"]["ipaddress"]
+OPENSHIFT_NODE_HOSTNAME = node["openshift"]["node"]["hostname"]
 
 case node["platform"]
 when "redhat","centos","fedora"
@@ -60,6 +62,11 @@ when "redhat","centos","fedora"
   end
 
   if node["openshift"]["node"]["enable"]
+    hostsfile_entry "#{OPENSHIFT_NODE_IP}" do
+      hostname "#{OPENSHIFT_NODE_HOSTNAME}.#{OPENSHIFT_DOMAIN}"
+      comment "openshift node"
+      action    :append
+    end
     include_recipe "openshift::node"
   end
 end
