@@ -1,7 +1,13 @@
 #openshift general attribs
 default["openshift"]["domain"] = "example.com"
+
+#openshift broker attribs
 default["openshift"]["broker"]["hostname"] = "broker"
 default["openshift"]["broker"]["ipaddress"] = ""
+
+#openshift node attribs
+default["openshift"]["node"]["hostname"] = "node1"
+default["openshift"]["node"]["ipaddress"] = ""
 
 #openshift broker attribs
 default["openshift"]["broker"]["enable"] = true
