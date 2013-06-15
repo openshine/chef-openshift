@@ -15,6 +15,13 @@ Vagrant.configure("2") do |config|
   config.vm.provision :chef_solo do |chef|
     chef.add_recipe "openshift"
 
-    chef.json = {}
+    chef.json = {
+      :openshift => {
+        :broker => {
+          :ipaddress => "34.33.33.10",
+          :hostname  => "mybroker"
+        }
+      }
+    }
   end
 end
