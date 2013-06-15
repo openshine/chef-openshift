@@ -29,6 +29,15 @@ ruby_block 'Tweak /etc/openshift/broker.conf' do
   end
 end
 
+ruby_block 'Add ServerName to /etc/httpd/conf.d/000002_openshift_origin_broker_servername.conf' do
+  block do
+    f = Chef::Util::FileEdit.new('/etc/httpd/conf.d/000002_openshift_origin_broker_servername.conf')
+    f.search_file_replace("ServerName .*$", "ServerName broker.#{OPENSHIFT_DOMAIN}")
+    f.write_file
+  end
+end
+
+#broker plugins and MongoDB user accounts
 execute "openshift-origin-auth-remote-user plugin conf" do
   cwd "/etc/openshift"
   user "root"
@@ -72,14 +81,6 @@ execute "apache openshift-origin-auth-remote-user.conf" do
   user "root"
   command "cp -v /var/www/openshift/broker/httpd/conf.d/openshift-origin-auth-remote-user-basic.conf.sample /var/www/openshift/broker/httpd/conf.d/openshift-origin-auth-remote-user.conf"
   not_if { ::File.exists?("/var/www/openshift/broker/httpd/conf.d/openshift-origin-auth-remote-user.conf") }
-end
-
-ruby_block 'Add ServerName to /etc/httpd/conf.d/000002_openshift_origin_broker_servername.conf' do
-  block do
-    f = Chef::Util::FileEdit.new('/etc/httpd/conf.d/000002_openshift_origin_broker_servername.conf')
-    f.search_file_replace("ServerName .*$", "ServerName broker.#{OPENSHIFT_DOMAIN}")
-    f.write_file
-  end
 end
 
 bash "openshift htpasswd" do
