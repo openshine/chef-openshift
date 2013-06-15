@@ -18,9 +18,11 @@
 #
 
 OPENSHIFT_DOMAIN = node["openshift"]["domain"]
+BROKER_IP = node["ipaddress"]
 
 package "bind"
 package "bind-utils"
+package "openshift-origin-broker-util"
 
 execute "dnssec-keygen" do
   cwd "/var/named"
@@ -100,18 +102,8 @@ service "named" do
  action [ :enable, :start ]
 end
 
-bash "nsupdate" do
+execute "nsupdate" do
   cwd "/var/named"
   user "root"
-  code <<-EOH
-     KEYFILE=/var/named/${DOMAIN}.key
-     B="/var/named/batch.txt"
-     echo "server 127.0.0.1" > ${B}
-     echo "update delete broker.${DOMAIN} A" >> ${B}
-     echo "update add broker.${DOMAIN} 180 A ${IP}" >> ${B}
-     echo "send" >> ${B}
-     nsupdate -k ${KEYFILE} ${B}
-     rm ${B}
-  EOH
-  environment({ 'DOMAIN' => "#{OPENSHIFT_DOMAIN}", 'IP' => node["ipaddress"]})
+  command "oo-register-dns -s 127.0.0.1 -h broker -d #{OPENSHIFT_DOMAIN} -n #{BROKER_IP} -k /var/named/#{OPENSHIFT_DOMAIN}.key"
 end
