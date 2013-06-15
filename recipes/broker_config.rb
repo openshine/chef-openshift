@@ -54,12 +54,13 @@ ruby_block "create /etc/openshift/plugins.d/openshift-origin-dns-bind.conf templ
     end
 
     res = Chef::Resource::Template.new "/etc/openshift/plugins.d/openshift-origin-dns-bind.conf", run_context
-    res.source "openshift-origin-dns-bind.conf.erb"
+    res.source "broker/plugins/dns/bind/dns-bind.conf.erb"
     res.owner "root"
     res.group "root"
+    res.mode "644"
     res.cookbook "openshift"
     res.variables({ :domain => "#{OPENSHIFT_DOMAIN}",
-                    :ip => node["ipaddress"],
+                    :ip => "127.0.0.1",
                     :key => "#{dns_key}"
                   })
     res.run_action :create
