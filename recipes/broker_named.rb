@@ -39,6 +39,8 @@ execute "rndc-confgen" do
    not_if { ::File.exists?("/etc/rndc.key") }
 end
 
+execute "restorecon -v /etc/rndc.* /etc/named.*"
+
 file "/etc/rndc.key" do
   owner "root"
   group "named"
@@ -52,6 +54,8 @@ template "/var/named/forwarders.conf" do
   group "named"
   variables({ :ip_list => node["openshift"]["named"]["forwarders"] })
 end
+
+execute "restorecon -v /var/named/forwarders.conf"
 
 template "/var/named/dynamic/#{OPENSHIFT_DOMAIN}.db" do
   source "named/dynamic-domain.db.erb"
@@ -84,6 +88,8 @@ ruby_block "create /var/named/#{OPENSHIFT_DOMAIN}.key template" do
   end
 end
 
+execute "restorecon -rv /var/named"
+
 template "/etc/named.conf" do
   source "named/named.conf.erb"
   mode 0755
@@ -91,6 +97,8 @@ template "/etc/named.conf" do
   group "named"
   variables({ :domain => "#{OPENSHIFT_DOMAIN}" })
 end
+
+execute "restorecon /etc/named.conf"
 
 openshift_fwd "Enable dns firewall" do
   type "service"

@@ -77,3 +77,6 @@ end
     command "fixfiles -R #{pkg} restore"
   end
 end
+
+execute "restorecon -rv /var/run"
+execute "restorecon -rv /usr/share/gems/gems/passenger-*"
