@@ -18,6 +18,7 @@
 #
 
 OPENSHIFT_DOMAIN = node["openshift"]["domain"]
+OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
 
 case node["platform"]
 when "redhat","centos","fedora"
@@ -49,7 +50,7 @@ when "redhat","centos","fedora"
   if node["openshift"]["broker"]["enable"]
     ip = node["ipaddress"]
     hostsfile_entry "#{ip}" do
-      hostname "broker.#{OPENSHIFT_DOMAIN}"
+      hostname "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}"
       comment   "openshift broker domain"
       action    :create_if_missing
     end

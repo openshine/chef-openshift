@@ -18,6 +18,7 @@
 #
 
 OPENSHIFT_DOMAIN = node["openshift"]["domain"]
+OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
 
 #Tweak /etc/openshift/broker.conf
 ruby_block 'Tweak /etc/openshift/broker.conf' do
@@ -32,7 +33,7 @@ end
 ruby_block 'Add ServerName to /etc/httpd/conf.d/000002_openshift_origin_broker_servername.conf' do
   block do
     f = Chef::Util::FileEdit.new('/etc/httpd/conf.d/000002_openshift_origin_broker_servername.conf')
-    f.search_file_replace("ServerName .*$", "ServerName broker.#{OPENSHIFT_DOMAIN}")
+    f.search_file_replace("ServerName .*$", "ServerName #{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}")
     f.write_file
   end
 end

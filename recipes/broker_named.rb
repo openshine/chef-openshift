@@ -18,6 +18,7 @@
 #
 
 OPENSHIFT_DOMAIN = node["openshift"]["domain"]
+OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
 BROKER_IP = node["ipaddress"]
 
 package "bind"
@@ -105,5 +106,5 @@ end
 execute "nsupdate" do
   cwd "/var/named"
   user "root"
-  command "oo-register-dns -s 127.0.0.1 -h broker -d #{OPENSHIFT_DOMAIN} -n #{BROKER_IP} -k /var/named/#{OPENSHIFT_DOMAIN}.key"
+  command "oo-register-dns -s 127.0.0.1 -h #{OPENSHIFT_BROKER_HOSTNAME} -d #{OPENSHIFT_DOMAIN} -n #{BROKER_IP} -k /var/named/#{OPENSHIFT_DOMAIN}.key"
 end
