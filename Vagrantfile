@@ -11,6 +11,7 @@ Vagrant.configure("2") do |config|
 
   config.berkshelf.enabled = true
 
+  config.vm.provision :shell, :inline => "sed -e 's:enabled=1:enabled=0:g' -i /etc/yum.repos.d/fedora-updates-testing.repo"
 
   config.vm.provision :chef_solo do |chef|
     chef.add_recipe "openshift"
