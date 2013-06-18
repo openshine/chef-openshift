@@ -19,3 +19,14 @@
 
 include_recipe "openshift::node_sync"
 include_recipe "openshift::node_messaging"
+
+%w{rubygem-openshift-origin-node
+   rubygem-passenger-native
+   openshift-origin-port-proxy
+   openshift-origin-node-util
+   openshift-origin-cartridge-cron-1.4
+   openshift-origin-cartridge-diy-0.1
+}.each do |pkg|
+  package "#{pkg}"
+end
+
