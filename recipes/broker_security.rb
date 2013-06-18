@@ -17,6 +17,9 @@
 # limitations under the License.
 #
 
+OPENSHIFT_DOMAIN = node["openshift"]["domain"]
+OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
+
 service "sshd" do
   supports :status => true, :restart => true, :reload => true
   action [ :enable, :start ]
@@ -58,10 +61,9 @@ end
 execute "generate rsync ssh keys" do
   cwd "/etc/openshift"
   user "root"
-  command "ssh-keygen -q -t rsa -b 2048 -f /etc/openshift/rsync_id_rsa -N ''"
+  command "ssh-keygen -q -t rsa -b 2048 -f /etc/openshift/rsync_id_rsa -N '' -C 'openshift@#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}'"
   not_if { ::File.exists?("/etc/openshift/rsync_id_rsa") }
 end
-
 
 #Selinux settings
 execute "set selinux policies" do
