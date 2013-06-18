@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: openshift
-# Recipe:: node
+# Recipe:: node_cgroups
 #
 # Copyright 2013, Openshine S.L.
 #
@@ -17,18 +17,11 @@
 # limitations under the License.
 #
 
-include_recipe "openshift::node_sync"
-include_recipe "openshift::node_messaging"
-
-%w{rubygem-openshift-origin-node
-   rubygem-passenger-native
-   openshift-origin-port-proxy
-   openshift-origin-node-util
-   openshift-origin-cartridge-cron-1.4
-   openshift-origin-cartridge-diy-0.1
-}.each do |pkg|
-  package "#{pkg}"
+%w{cgconfig cgred cgred}.each do |service|
+  service "#{service}" do
+    supports :status => true, :restart => true, :reload => true
+    action [ :enable, :restart ]
+  end
 end
 
-include_recipe "openshift::node_security"
-include_recipe "openshift::node_cgroups"
+execute "/usr/sbin/chkconfig openshift-cgroups on"
