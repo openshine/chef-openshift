@@ -22,6 +22,23 @@ service "sshd" do
   action [ :enable, :start ]
 end
 
+ruby_block "Tweak /etc/ssh/sshd_config" do
+  block do
+    f = Chef::Util::FileEdit.new("/etc/ssh/sshd_config")
+    f.search_file_replace("^(#|)MaxSessions.*", "MaxSessions 40")
+    f.search_file_replace("^(#|)MaxStartups.*", "MaxStartups 40")
+    f.write_file
+  end
+end
+
+ruby_block "Tweak /etc/ssh/sshd_config (second pass)" do
+  block do
+    f = Chef::Util::FileEdit.new("/etc/ssh/sshd_config")
+    f.insert_line_if_no_match(".*GIT_SSH.*", "AcceptEnv GIT_SSH")
+    f.write_file
+  end
+end
+
 openshift_fwd "Enable ssh firewall" do
   type "service"
   service "ssh"
@@ -57,6 +74,11 @@ end
       f.write_file
     end
   end
+end
+
+service "sshd" do
+  supports :status => true, :restart => true, :reload => true
+  action [ :restart ]
 end
 
 #SELinux
