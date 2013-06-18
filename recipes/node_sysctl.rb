@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: openshift
-# Recipe:: node
+# Recipe:: node_sysctl
 #
 # Copyright 2013, Openshine S.L.
 #
@@ -17,20 +17,11 @@
 # limitations under the License.
 #
 
-include_recipe "openshift::node_sync"
-include_recipe "openshift::node_messaging"
-
-%w{rubygem-openshift-origin-node
-   rubygem-passenger-native
-   openshift-origin-port-proxy
-   openshift-origin-node-util
-   openshift-origin-cartridge-cron-1.4
-   openshift-origin-cartridge-diy-0.1
-}.each do |pkg|
-  package "#{pkg}"
+template "/etc/sysctl.d/openshift.conf" do
+  source "node/sysctl.d/openshift.conf.erb"
+  mode 0644
+  owner "root"
+  group "root"
 end
 
-include_recipe "openshift::node_security"
-include_recipe "openshift::node_cgroups"
-include_recipe "openshift::node_quota"
-include_recipe "openshift::node_sysctl"
+execute "sysctl -p /etc/sysctl.d/openshift.conf"
