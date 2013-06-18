@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: openshift
-# Recipe:: node
+# Recipe:: node_quota
 #
 # Copyright 2013, Openshine S.L.
 #
@@ -17,19 +17,12 @@
 # limitations under the License.
 #
 
-include_recipe "openshift::node_sync"
-include_recipe "openshift::node_messaging"
-
-%w{rubygem-openshift-origin-node
-   rubygem-passenger-native
-   openshift-origin-port-proxy
-   openshift-origin-node-util
-   openshift-origin-cartridge-cron-1.4
-   openshift-origin-cartridge-diy-0.1
-}.each do |pkg|
-  package "#{pkg}"
+ruby_block 'Tweak /etc/fstab to add support for user quotas' do
+  block do
+    FS=`LANG=C df /var/lib | grep -v Filesystem | awk '{print $6}'`.strip!
+    if not system("grep \"[[:space:]]#{FS}[[:space:]] .*usrquota\" /etc/fstab > /dev/null")
+      system("sed -e \"s|^\\S*\\s\\+#{FS}\\s\\+\\S*\\s\\+|&usrquota,|\" -i /etc/fstab")
+      system("mount -o remount #{FS}")
+    end
+  end
 end
-
-include_recipe "openshift::node_security"
-include_recipe "openshift::node_cgroups"
-include_recipe "openshift::node_quota"
