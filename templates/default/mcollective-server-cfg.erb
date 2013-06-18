@@ -1,0 +1,35 @@
+topicprefix = /topic/
+main_collective = mcollective
+collectives = mcollective
+<%if @platform == "fedora"%>
+libdir = /usr/libexec/mcollective
+<%end%>
+<%if @platform == "redHat" or @platform == "centos" %>
+libdir = /opt/rh/ruby193/root/usr/libexec/mcollective
+<%end%>logfile = /var/log/mcollective.log
+loglevel = debug
+daemonize = 1
+direct_addressing = n
+
+# Plugins
+securityprovider = psk
+plugin.psk = unset
+
+<% case @mq_provider
+     when 'activemq' %>
+connector = activemq
+plugin.activemq.pool.size = 1
+plugin.activemq.pool.1.host = @mq_fqdn %>
+plugin.activemq.pool.1.port = 61613
+plugin.activemq.pool.1.user = <%= @mq_server_user %>
+plugin.activemq.pool.1.password = <%= @mq_server_password %>
+<%   when 'qpid' %>
+connector = qpid
+plugin.qpid.host=<%= @mq_fqdn %>
+plugin.qpid.secure=false
+plugin.qpid.timeout=5
+<%  end %>
+
+# Facts
+factsource = yaml
+plugin.yaml = /etc/mcollective/facts.yaml

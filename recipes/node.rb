@@ -18,3 +18,4 @@
 #
 
 include_recipe "openshift::node_sync"
+include_recipe "openshift::node_messaging"
