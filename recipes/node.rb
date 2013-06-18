@@ -30,3 +30,4 @@ include_recipe "openshift::node_messaging"
   package "#{pkg}"
 end
 
+include_recipe "openshift::node_security"
