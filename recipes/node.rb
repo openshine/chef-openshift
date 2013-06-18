@@ -17,3 +17,4 @@
 # limitations under the License.
 #
 
+include_recipe "openshift::node_sync"
