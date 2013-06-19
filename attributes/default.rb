@@ -1,6 +1,9 @@
 #openshift general attribs
 default["openshift"]["domain"] = "example.com"
 
+#openshift nightly builds repostories
+default["openshift"]["nightly"]["enable"] = false
+
 #openshift broker attribs
 default["openshift"]["broker"]["hostname"] = "broker"
 default["openshift"]["broker"]["ipaddress"] = ""

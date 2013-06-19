@@ -28,6 +28,7 @@ hostsfile_entry "#{OPENSHIFT_BROKER_IP}" do
 end
 
 include_recipe "ntp"
+include_recipe "openshift::nightly"
 include_recipe "openshift::broker_sync"
 include_recipe "openshift::broker_avahi"
 include_recipe "openshift::broker_named"
