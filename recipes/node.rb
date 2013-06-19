@@ -34,3 +34,10 @@ include_recipe "openshift::node_security"
 include_recipe "openshift::node_cgroups"
 include_recipe "openshift::node_quota"
 include_recipe "openshift::node_sysctl"
+
+openshift_fwd "Enable proxy port firewall" do
+  type "portrange"
+  portrange "35531-65535"
+  protocol "tcp"
+  action :add
+end
