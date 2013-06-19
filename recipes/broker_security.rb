@@ -61,7 +61,14 @@ end
 execute "generate rsync ssh keys" do
   cwd "/etc/openshift"
   user "root"
-  command "ssh-keygen -q -t rsa -b 2048 -f /etc/openshift/rsync_id_rsa -N '' -C 'openshift@#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}'"
+  command "ssh-keygen -q -t rsa -b 2048 -f /root/.ssh/rsync_id_rsa -N '' -C 'openshift@#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}'"
+  not_if { ::File.exists?("/root/.ssh/rsync_id_rsa") }
+end
+
+execute "copy rsync ssh keys to /etc/openshift/" do
+  cwd "/etc/openshift"
+  user "root"
+  command "cp /root/.ssh/rsync_id_rsa* ."
   not_if { ::File.exists?("/etc/openshift/rsync_id_rsa") }
 end
 
