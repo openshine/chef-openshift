@@ -50,6 +50,17 @@ action :add do
         user "root"
         command "/usr/bin/firewall-cmd --permanent --add-port=#{port}/#{protocol}"
       end
+    when "portrange"
+      port = @new_resource.portrange
+      protocol = @new_resource.protocol
+      execute "Add #{port}/#{protocol} to firewall" do
+        user "root"
+        command "/usr/bin/firewall-cmd --add-port=#{port}/#{protocol}"
+      end
+      execute "Add #{port}/#{protocol} to firewall permanently" do
+        user "root"
+        command "/usr/bin/firewall-cmd --permanent --add-port=#{port}/#{protocol}"
+      end
     end
   when "lokkit"
     case @new_resource.type
@@ -61,6 +72,13 @@ action :add do
       end
     when "port"
       port = @new_resource.port
+      protocol = @new_resource.protocol
+      execute "Add #{port}/#{protocol} to firewall" do
+        user "root"
+        command "/usr/sbin/lokkit --port=#{port}:#{protocol}"
+      end
+    when "portrange"
+      port = @new_resource.portrange
       protocol = @new_resource.protocol
       execute "Add #{port}/#{protocol} to firewall" do
         user "root"
