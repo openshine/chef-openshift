@@ -21,36 +21,37 @@ OPENSHIFT_DOMAIN = node["openshift"]["domain"]
 OPENSHIFT_NODE_IP = node["openshift"]["node"]["ipaddress"] == "" ? node["ipaddress"] : node["openshift"]["node"]["ipaddress"]
 OPENSHIFT_NODE_HOSTNAME = node["openshift"]["node"]["hostname"]
 
-if ::File.exists?("/var/named/#{OPENSHIFT_DOMAIN}.key") and ::File.exists?("/etc/openshift/rsync_id_rsa")
-  package "openshift-origin-broker-util"
+#If Node and broker will be running in the same host
 
-  execute "register node with oo-register-dns" do
-    command "oo-register-dns -s 127.0.0.1 -h #{OPENSHIFT_NODE_HOSTNAME} -d #{OPENSHIFT_DOMAIN} -n #{OPENSHIFT_NODE_IP} -k /var/named/#{OPENSHIFT_DOMAIN}.key"
-  end
-
-
-  if ::File.exists?("/root/.ssh/authorized_keys")
-    ruby_block 'Add /etc/openshift/rsync_id_rsa.pub to /root/.ssh/authorized_keys' do
-      block do
-        rsa_pub = File.open("/etc/openshift/rsync_id_rsa.pub").read().strip!
-        f = Chef::Util::FileEdit.new('/root/.ssh/authorized_keys')
-        f.insert_line_if_no_match(rsa_pub, rsa_pub)
-        f.write_file
-      end
-    end
-  else
-    directory "/root/.ssh/" do
-      owner "root"
-      group "root"
-      mode 00700
-      action :create
-    end
-    file "/root/.ssh/authorized_keys" do
-      owner "root"
-      group "root"
-      mode "644"
-      content File.open("/etc/openshift/rsync_id_rsa.pub").read()
-      action :create_if_missing
-    end
-  end
+execute "register node with oo-register-dns" do
+  command "oo-register-dns -s 127.0.0.1 -h #{OPENSHIFT_NODE_HOSTNAME} -d #{OPENSHIFT_DOMAIN} -n #{OPENSHIFT_NODE_IP} -k /var/named/#{OPENSHIFT_DOMAIN}.key"
+  only_if { ::File.exists?("/var/named/#{OPENSHIFT_DOMAIN}.key") }
 end
+
+directory "/root/.ssh/" do
+  owner "root"
+  group "root"
+  mode 00700
+  action :create
+  only_if {::File.exists?("/etc/openshift/rsync_id_rsa.pub")}
+end
+
+file "/root/.ssh/authorized_keys" do
+  owner "root"
+  group "root"
+  mode "644"
+  content File.open("/etc/openshift/rsync_id_rsa.pub").read()
+  action :create_if_missing
+  only_if {::File.exists?("/etc/openshift/rsync_id_rsa.pub")}
+end
+
+ruby_block 'Check /etc/openshift/rsync_id_rsa.pub in /root/.ssh/authorized_keys' do
+  block do
+    rsa_pub = File.open("/etc/openshift/rsync_id_rsa.pub").read().strip!
+    f = Chef::Util::FileEdit.new('/root/.ssh/authorized_keys')
+    f.insert_line_if_no_match(rsa_pub, rsa_pub)
+    f.write_file
+  end
+  only_if {::File.exists?("/root/.ssh/authorized_keys") and ::File.exists?("/etc/openshift/rsync_id_rsa.pub")}
+end
+
