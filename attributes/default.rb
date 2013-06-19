@@ -9,12 +9,6 @@ default["openshift"]["broker"]["ipaddress"] = ""
 default["openshift"]["node"]["hostname"] = "node1"
 default["openshift"]["node"]["ipaddress"] = ""
 
-#openshift broker attribs
-default["openshift"]["broker"]["enable"] = true
-
-#openshift node attribs
-default["openshift"]["node"]["enable"] = true
-
 #openshift named conf
 default["openshift"]["named"]["forwarders"] = ["8.8.8.8", "8.8.4.4"]
 
@@ -24,4 +18,10 @@ default["openshift"]["messaging"]["server"]["user"] = "mcollective"
 default["openshift"]["messaging"]["server"]["password"] = "marionette"
 default["openshift"]["messaging"]["server"]["install_method"] = "pkg"
 
-
+#openshift sync broker<->node
+default["openshift"]["sync"]["enable"] = false
+default["openshift"]["sync"]["user"] = "oshiftsync"
+default["openshift"]["sync"]["password"] = "oshiftsync"
+default["openshift"]["sync"]["uid"] = 59012
+default["openshift"]["sync"]["gid"] = 59012
+default["openshift"]["sync"]["home"] = "/home/oshiftsync"

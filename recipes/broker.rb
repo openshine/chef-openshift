@@ -17,7 +17,18 @@
 # limitations under the License.
 #
 
+OPENSHIFT_DOMAIN = node["openshift"]["domain"]
+OPENSHIFT_BROKER_IP = node["openshift"]["broker"]["ipaddress"] == "" ? node["ipaddress"] : node["openshift"]["broker"]["ipaddress"]
+OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
+
+hostsfile_entry "#{OPENSHIFT_BROKER_IP}" do
+  hostname "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}"
+  comment "openshift broker"
+  action    :append
+end
+
 include_recipe "ntp"
+include_recipe "openshift::broker_sync"
 include_recipe "openshift::broker_named"
 include_recipe "openshift::broker_mongodb"
 include_recipe "openshift::broker_messaging"

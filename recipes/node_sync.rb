@@ -20,38 +20,53 @@
 OPENSHIFT_DOMAIN = node["openshift"]["domain"]
 OPENSHIFT_NODE_IP = node["openshift"]["node"]["ipaddress"] == "" ? node["ipaddress"] : node["openshift"]["node"]["ipaddress"]
 OPENSHIFT_NODE_HOSTNAME = node["openshift"]["node"]["hostname"]
+OPENSHIFT_BROKER_IP = node["openshift"]["broker"]["ipaddress"]
 
-#If Node and broker will be running in the same host
+SYNC_ENABLE = node["openshift"]["sync"]["enable"]
+SYNC_USER = node["openshift"]["sync"]["user"]
+SYNC_PASSWORD = node["openshift"]["sync"]["password"]
+SYNC_HOME = node["openshift"]["sync"]["home"]
 
-execute "register node with oo-register-dns" do
-  command "oo-register-dns -s 127.0.0.1 -h #{OPENSHIFT_NODE_HOSTNAME} -d #{OPENSHIFT_DOMAIN} -n #{OPENSHIFT_NODE_IP} -k /var/named/#{OPENSHIFT_DOMAIN}.key"
-  only_if { ::File.exists?("/var/named/#{OPENSHIFT_DOMAIN}.key") }
-end
-
-directory "/root/.ssh/" do
-  owner "root"
-  group "root"
-  mode 00700
-  action :create
-  only_if {::File.exists?("/etc/openshift/rsync_id_rsa.pub")}
-end
-
-file "/root/.ssh/authorized_keys" do
-  owner "root"
-  group "root"
-  mode "644"
-  content File.open("/etc/openshift/rsync_id_rsa.pub").read()
-  action :create_if_missing
-  only_if {::File.exists?("/etc/openshift/rsync_id_rsa.pub")}
-end
-
-ruby_block 'Check /etc/openshift/rsync_id_rsa.pub in /root/.ssh/authorized_keys' do
-  block do
-    rsa_pub = File.open("/etc/openshift/rsync_id_rsa.pub").read().strip!
-    f = Chef::Util::FileEdit.new('/root/.ssh/authorized_keys')
-    f.insert_line_if_no_match(rsa_pub, rsa_pub)
-    f.write_file
+if SYNC_ENABLE
+  directory "/root/.ssh/" do
+    owner "root"
+    group "root"
+    mode 00700
+    action :create
   end
-  only_if {::File.exists?("/root/.ssh/authorized_keys") and ::File.exists?("/etc/openshift/rsync_id_rsa.pub")}
-end
 
+  chef_gem "net-sftp"
+  ruby_block 'Save rsync_id_rsa.pub from broker' do
+    block do
+      require 'net/sftp'
+      Net::SFTP.start("#{OPENSHIFT_BROKER_IP}",
+                      "#{SYNC_USER}", :password => "#{SYNC_PASSWORD}") do |sftp|
+        data = sftp.download!("#{SYNC_HOME}/rsync_id_rsa.pub").strip!
+
+        if File.exists?("/root/.ssh/authorized_keys")
+          f = Chef::Util::FileEdit.new('/root/.ssh/authorized_keys')
+          f.insert_line_if_no_match(data, data)
+          f.write_file
+        else
+          File.open("/root/.ssh/authorized_keys", "w+") { |file| file.write(data) }
+        end
+      end
+    end
+  end
+
+  chef_gem "net-ssh"
+  ruby_block 'Register node domain at broker dns' do
+    block do
+      require 'net/ssh'
+
+      Net::SSH.start("#{OPENSHIFT_BROKER_IP}",
+                     "#{SYNC_USER}", :password => "#{SYNC_PASSWORD}") do |ssh|
+        ssh.open_channel do |ch|
+          ch.request_pty
+          res = ch.exec "sudo /sbin/oo-register-dns -s 127.0.0.1 -h #{OPENSHIFT_NODE_HOSTNAME} -d #{OPENSHIFT_DOMAIN} -n #{OPENSHIFT_NODE_IP} -k /var/named/#{OPENSHIFT_DOMAIN}.key"
+        end
+      end
+    end
+  end
+
+end

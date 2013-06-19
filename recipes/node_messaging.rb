@@ -23,6 +23,7 @@ OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
 case node["openshift"]["messaging"]["provider"]
 when "qpid"
   package "openshift-origin-msg-node-mcollective"
+  package "mcollective-qpid-plugin"
   package "mcollective"
 
   template "/etc/mcollective/server.cfg" do
