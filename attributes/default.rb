@@ -25,3 +25,8 @@ default["openshift"]["sync"]["password"] = "oshiftsync"
 default["openshift"]["sync"]["uid"] = 59012
 default["openshift"]["sync"]["gid"] = 59012
 default["openshift"]["sync"]["home"] = "/home/oshiftsync"
+
+#openshift avahi support
+default["openshift"]["avahi"]["enable"] = false
+
+

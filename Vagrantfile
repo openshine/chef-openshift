@@ -23,6 +23,9 @@ Vagrant.configure("2") do |config|
           },
           :sync => {
             :enable => true
+          },
+          :avahi => {
+            :enable => true
           }
         }
       }
