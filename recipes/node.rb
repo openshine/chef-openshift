@@ -17,6 +17,11 @@
 # limitations under the License.
 #
 
+OPENSHIFT_DOMAIN = node["openshift"]["domain"]
+OPENSHIFT_NODE_IP = node["openshift"]["node"]["ipaddress"] == "" ? node["ipaddress"] : node["openshift"]["node"]["ipaddress"]
+OPENSHIFT_NODE_HOSTNAME = node["openshift"]["node"]["hostname"]
+OPENSHIFT_BROKER_IP = node["openshift"]["broker"]["ipaddress"] == "" ? node["ipaddress"] : node["openshift"]["broker"]["ipaddress"]
+
 include_recipe "openshift::node_sync"
 include_recipe "openshift::node_messaging"
 
@@ -40,4 +45,28 @@ openshift_fwd "Enable proxy port firewall" do
   portrange "35531-65535"
   protocol "tcp"
   action :add
+end
+
+service "openshift-port-proxy" do
+ supports :status => true, :restart => true, :reload => true
+ action [ :enable, :restart ]
+end
+
+template "/etc/openshift/node.conf" do
+  source "node/node.conf.erb"
+  mode 0644
+  owner "root"
+  group "root"
+  variables({ :domain => "#{OPENSHIFT_DOMAIN}",
+              :broker_ip => "#{OPENSHIFT_BROKER_IP}",
+              :node_ip => "#{OPENSHIFT_NODE_IP}",
+              :node_fqdn => "#{OPENSHIFT_NODE_HOSTNAME}.#{OPENSHIFT_DOMAIN}"
+            })
+end
+
+execute "/etc/cron.minutely/openshift-facts"
+
+service "openshift-gears" do
+ supports :status => true, :restart => true, :reload => true
+ action [ :enable, :restart ]
 end
