@@ -9,6 +9,7 @@ libdir = /opt/rh/ruby193/root/usr/libexec/mcollective
 <%end%>
 loglevel = debug
 logfile = /var/log/mcollective-client.log
+identity = <%= @mq_fqdn %>
 
 # Plugins
 securityprovider = psk

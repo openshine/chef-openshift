@@ -18,6 +18,7 @@
 #
 
 OPENSHIFT_DOMAIN = node["openshift"]["domain"]
+OPENSHIFT_NODE_HOSTNAME = node["openshift"]["node"]["hostname"]
 OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
 
 case node["openshift"]["messaging"]["provider"]
@@ -34,6 +35,7 @@ when "qpid"
     variables({ :platform => node["platform"],
                 :mq_provider => node["openshift"]["messaging"]["provider"],
                 :mq_fqdn => "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
+                :mq_node_fqdn => "#{OPENSHIFT_NODE_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
                 :mq_server_user => node["openshift"]["messaging"]["server"]["user"],
                 :mq_server_password => node["openshift"]["messaging"]["server"]["password"]
               })
