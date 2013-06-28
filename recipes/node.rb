@@ -36,6 +36,7 @@ hostsfile_entry "#{OPENSHIFT_NODE_IP}" do
 end
 
 include_recipe "openshift::nightly"
+include_recipe "openshift::node_dhcp"
 include_recipe "openshift::node_sync"
 include_recipe "openshift::node_messaging"
 

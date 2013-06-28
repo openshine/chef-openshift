@@ -32,6 +32,7 @@ include_recipe "openshift::nightly"
 include_recipe "openshift::broker_sync"
 include_recipe "openshift::broker_avahi"
 include_recipe "openshift::broker_named"
+include_recipe "openshift::broker_dhcp"
 include_recipe "openshift::broker_mongodb"
 include_recipe "openshift::broker_messaging"
 

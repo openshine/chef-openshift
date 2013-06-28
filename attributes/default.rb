@@ -12,6 +12,10 @@ default["openshift"]["broker"]["ipaddress"] = ""
 default["openshift"]["node"]["hostname"] = "node1"
 default["openshift"]["node"]["ipaddress"] = ""
 
+#openshift dhcp conf
+default["openshift"]["dhcp"]["enable"] = false
+default["openshift"]["dhcp"]["prepend_dns"] = ""
+
 #openshift named conf
 default["openshift"]["named"]["forwarders"] = ["8.8.8.8", "8.8.4.4"]
 

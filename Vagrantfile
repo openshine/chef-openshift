@@ -26,6 +26,9 @@ Vagrant.configure("2") do |config|
           },
           :avahi => {
             :enable => true
+          },
+          :dhcp => {
+            :enable => true
           }
         }
       }
@@ -54,6 +57,9 @@ Vagrant.configure("2") do |config|
             :hostname  => "mynode1"
           },
           :sync => {
+            :enable => true
+          },
+          :dhcp => {
             :enable => true
           }
         }
