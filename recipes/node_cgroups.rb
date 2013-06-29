@@ -17,8 +17,8 @@
 # limitations under the License.
 #
 
-%w{cgconfig cgred cgred}.each do |service|
-  service "#{service}" do
+%w{cgconfig cgred cgred}.each do |serv|
+  service serv do
     supports :status => true, :restart => true, :reload => true
     action [ :enable, :restart ]
   end

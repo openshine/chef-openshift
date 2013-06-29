@@ -39,8 +39,8 @@ if SYNC_ENABLE
   ruby_block 'Save rsync_id_rsa.pub from broker' do
     block do
       require 'net/sftp'
-      Net::SFTP.start("#{OPENSHIFT_BROKER_IP}",
-                      "#{SYNC_USER}", :password => "#{SYNC_PASSWORD}") do |sftp|
+      Net::SFTP.start(OPENSHIFT_BROKER_IP,
+                      SYNC_USER, :password => SYNC_PASSWORD) do |sftp|
         data = sftp.download!("#{SYNC_HOME}/rsync_id_rsa.pub").strip!
 
         if File.exists?("/root/.ssh/authorized_keys")
@@ -59,8 +59,8 @@ if SYNC_ENABLE
     block do
       require 'net/ssh'
 
-      Net::SSH.start("#{OPENSHIFT_BROKER_IP}",
-                     "#{SYNC_USER}", :password => "#{SYNC_PASSWORD}") do |ssh|
+      Net::SSH.start(OPENSHIFT_BROKER_IP,
+                     SYNC_USER, :password => SYNC_PASSWORD) do |ssh|
         ssh.open_channel do |ch|
           ch.request_pty
           res = ch.exec "sudo /sbin/oo-register-dns -s 127.0.0.1 -h #{OPENSHIFT_NODE_HOSTNAME} -d #{OPENSHIFT_DOMAIN} -n #{OPENSHIFT_NODE_IP} -k /var/named/#{OPENSHIFT_DOMAIN}.key"

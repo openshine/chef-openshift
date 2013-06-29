@@ -73,7 +73,7 @@ execute "copy rsync ssh keys to /etc/openshift/" do
 end
 
 execute "copy rsync public ssh keys to openshift sync user" do
-  cwd "#{node["openshift"]["sync"]["home"]}"
+  cwd node["openshift"]["sync"]["home"]
   user "root"
   command "cp /root/.ssh/rsync_id_rsa.pub ."
   only_if { node["openshift"]["sync"]["enable"] }

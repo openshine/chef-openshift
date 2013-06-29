@@ -25,13 +25,13 @@ SYNC_GID = node["openshift"]["sync"]["gid"]
 SYNC_HOME = node["openshift"]["sync"]["home"]
 
 if SYNC_ENABLE
-  user "#{SYNC_USER}" do
+  user SYNC_USER do
     comment "Openshift sync user"
     uid #{SYNC_UID}
     gid #{SYNC_GID}
-    home "#{SYNC_HOME}"
+    home SYNC_HOME
     shell "/bin/bash"
-    password "#{SYNC_PASSWORD}".strip!
+    password SYNC_PASSWORD.strip!
   end
 
   package "sudo"

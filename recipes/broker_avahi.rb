@@ -30,7 +30,7 @@ if node["openshift"]["avahi"]["enable"]
     mode 0644
     owner "root"
     group "root"
-    variables({ :hostname => "#{OPENSHIFT_BROKER_HOSTNAME}",
+    variables({ :hostname => OPENSHIFT_BROKER_HOSTNAME,
                 :domain => "#{OPENSHIFT_DOMAIN}.local" })
   end
 
@@ -39,7 +39,7 @@ if node["openshift"]["avahi"]["enable"]
     mode 0644
     owner "root"
     group "root"
-    variables({ :hostname => "#{OPENSHIFT_BROKER_HOSTNAME}",
+    variables({ :hostname => OPENSHIFT_BROKER_HOSTNAME,
                 :domain => "#{OPENSHIFT_DOMAIN}.local" })
   end
 

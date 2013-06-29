@@ -21,7 +21,7 @@ OPENSHIFT_DOMAIN = node["openshift"]["domain"]
 OPENSHIFT_BROKER_IP = node["openshift"]["broker"]["ipaddress"] == "" ? node["ipaddress"] : node["openshift"]["broker"]["ipaddress"]
 OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
 
-hostsfile_entry "#{OPENSHIFT_BROKER_IP}" do
+hostsfile_entry OPENSHIFT_BROKER_IP do
   hostname "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}"
   comment "openshift broker"
   action    :append
@@ -42,7 +42,7 @@ include_recipe "openshift::broker_messaging"
    rubygem-openshift-origin-msg-broker-mcollective
    rubygem-openshift-origin-dns-bind}.each do |pkg|
 
-  package "#{pkg}"
+  package pkg
 end
 
 include_recipe "openshift::broker_security"

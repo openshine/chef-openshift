@@ -23,13 +23,13 @@ OPENSHIFT_NODE_HOSTNAME = node["openshift"]["node"]["hostname"]
 OPENSHIFT_BROKER_IP = node["openshift"]["broker"]["ipaddress"] == "" ? node["ipaddress"] : node["openshift"]["broker"]["ipaddress"]
 OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
 
-hostsfile_entry "#{OPENSHIFT_BROKER_IP}" do
+hostsfile_entry OPENSHIFT_BROKER_IP do
   hostname "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}"
   comment "openshift broker"
   action    :append
 end
 
-hostsfile_entry "#{OPENSHIFT_NODE_IP}" do
+hostsfile_entry OPENSHIFT_NODE_IP do
   hostname "#{OPENSHIFT_NODE_HOSTNAME}.#{OPENSHIFT_DOMAIN}"
   comment "openshift node"
   action    :append
@@ -47,7 +47,7 @@ include_recipe "openshift::node_messaging"
    openshift-origin-cartridge-cron-1.4
    openshift-origin-cartridge-diy-0.1
 }.each do |pkg|
-  package "#{pkg}"
+  package pkg
 end
 
 include_recipe "openshift::node_security"
@@ -72,9 +72,9 @@ template "/etc/openshift/node.conf" do
   mode 0644
   owner "root"
   group "root"
-  variables({ :domain => "#{OPENSHIFT_DOMAIN}",
-              :broker_ip => "#{OPENSHIFT_BROKER_IP}",
-              :node_ip => "#{OPENSHIFT_NODE_IP}",
+  variables({ :domain => OPENSHIFT_DOMAIN,
+              :broker_ip => OPENSHIFT_BROKER_IP,
+              :node_ip => OPENSHIFT_NODE_IP,
               :node_fqdn => "#{OPENSHIFT_NODE_HOSTNAME}.#{OPENSHIFT_DOMAIN}"
             })
 end
