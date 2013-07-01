@@ -30,12 +30,17 @@ ruby_block 'Tweak /etc/openshift/broker.conf' do
   end
 end
 
-ruby_block 'Add ServerName to /etc/httpd/conf.d/000002_openshift_origin_broker_servername.conf' do
-  block do
-    f = Chef::Util::FileEdit.new('/etc/httpd/conf.d/000002_openshift_origin_broker_servername.conf')
-    f.search_file_replace("ServerName .*$", "ServerName #{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}")
-    f.write_file
-  end
+#configure apache site
+template "/etc/httpd/conf.d/000002_openshift_origin_broker_chef.conf" do
+  source "apache2/openshift-broker.conf.erb"
+  mode 0644
+  owner "apache"
+  group "apache"
+  variables ({
+               :docroot => "/var/www/html",
+               :server_name => "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
+               :server_aliases => ["#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}.local"]
+             })
 end
 
 #broker plugins and MongoDB user accounts

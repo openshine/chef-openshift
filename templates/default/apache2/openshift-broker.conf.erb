@@ -1,0 +1,36 @@
+<Directory />
+    Options FollowSymLinks
+    AllowOverride None
+</Directory>
+
+<VirtualHost *:80>
+  ServerName <%= @server_name %>
+  ServerAlias <% @server_aliases.each do |a| %><%= a %> <% end %>
+  DocumentRoot <%= @docroot %>
+  RewriteEngine              On
+  RewriteRule     ^/$    https://%{HTTP_HOST}/console [R,L]
+  RewriteRule     ^(.*)$     https://%{HTTP_HOST}$1 [R,L]
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName <%= @server_name %>
+  ServerAlias <% @server_aliases.each do |a| %><%= a %> <% end %>
+  DocumentRoot <%= @docroot %>
+  RewriteEngine              On
+  RewriteRule     ^/$    https://%{HTTP_HOST}/console [R,L]
+  SSLEngine on
+  SSLProxyEngine on
+  SSLCertificateFile /etc/pki/tls/certs/localhost.crt
+  SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
+  RequestHeader set X_FORWARDED_PROTO 'https'
+  RequestHeader set Front-End-Https "On"
+  ProxyTimeout 300
+  ProxyPass /console http://127.0.0.1:8118/console
+  ProxyPassReverse /console http://127.0.0.1:8118/console
+  ProxyPass /broker http://127.0.0.1:8080/broker
+  ProxyPassReverse /broker http://127.0.0.1:8080/broker
+</VirtualHost>
+
+ProxyPreserveHost On
+TraceEnable off
+
