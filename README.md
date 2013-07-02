@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/openshine/chef-openshift.png)](http://travis-ci.org/openshine/chef-openshift)
+
 Description
 ===========
 
