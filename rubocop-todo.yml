@@ -28,18 +28,6 @@ SpaceInsideBrackets:
 
 # Offence count: 2
 # Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SupportedStyles.
-SpaceInsideHashLiteralBraces:
-  Enabled: false
-
-# Offence count: 656
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-StringLiterals:
-  Enabled: false
-
-# Offence count: 2
-# Cop supports --auto-correct.
 TrailingBlankLines:
   Enabled: false
 

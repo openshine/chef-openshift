@@ -17,28 +17,28 @@
 # limitations under the License.
 #
 
-if node["openshift"]["nightly"]["enable"]
-  include_recipe "yum"
+if node['openshift']['nightly']['enable']
+  include_recipe 'yum'
 
   # Register yum repositories
-  yum_repository "openshift-nightly-deps" do
-    description "openshift"
-    case node["platform"]
-    when "fedora"
-      url "https://mirror.openshift.com/pub/origin-server/fedora-$releasever/$basearch/"
-    when "centos", "redhat"
-      url "https://mirror.openshift.com/pub/origin-server/rhel-$releasever/$basearch/"
+  yum_repository 'openshift-nightly-deps' do
+    description 'openshift'
+    case node['platform']
+    when 'fedora'
+      url 'https://mirror.openshift.com/pub/origin-server/fedora-$releasever/$basearch/'
+    when 'centos', 'redhat'
+      url 'https://mirror.openshift.com/pub/origin-server/rhel-$releasever/$basearch/'
     end
     action platform?('amazon') ? [:add, :update] : :add
   end
 
-  yum_repository "openshift-nightly" do
-    description "openshift nightly"
-    case node["platform"]
-    when "fedora"
-      url "https://mirror.openshift.com/pub/origin-server/nightly/fedora-$releasever/latest/$basearch/"
-    when "centos", "redhat"
-      url "https://mirror.openshift.com/pub/origin-server/nightly/rhel-$releasever/latest/$basearch/"
+  yum_repository 'openshift-nightly' do
+    description 'openshift nightly'
+    case node['platform']
+    when 'fedora'
+      url 'https://mirror.openshift.com/pub/origin-server/nightly/fedora-$releasever/latest/$basearch/'
+    when 'centos', 'redhat'
+      url 'https://mirror.openshift.com/pub/origin-server/nightly/rhel-$releasever/latest/$basearch/'
     end
     action platform?('amazon') ? [:add, :update] : :add
   end

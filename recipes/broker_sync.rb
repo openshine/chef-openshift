@@ -17,26 +17,26 @@
 # limitations under the License.
 #
 
-SYNC_ENABLE = node["openshift"]["sync"]["enable"]
-SYNC_USER = node["openshift"]["sync"]["user"]
-SYNC_PASSWORD = `openssl passwd -1 "#{node["openshift"]["sync"]["password"]}"`
-SYNC_UID = node["openshift"]["sync"]["uid"]
-SYNC_GID = node["openshift"]["sync"]["gid"]
-SYNC_HOME = node["openshift"]["sync"]["home"]
+SYNC_ENABLE = node['openshift']['sync']['enable']
+SYNC_USER = node['openshift']['sync']['user']
+SYNC_PASSWORD = `openssl passwd -1 "#{node['openshift']['sync']['password']}"`
+SYNC_UID = node['openshift']['sync']['uid']
+SYNC_GID = node['openshift']['sync']['gid']
+SYNC_HOME = node['openshift']['sync']['home']
 
 if SYNC_ENABLE
   user SYNC_USER do
-    comment "Openshift sync user"
+    comment 'Openshift sync user'
     uid # {SYNC_UID}
     gid # {SYNC_GID}
     home SYNC_HOME
-    shell "/bin/bash"
+    shell '/bin/bash'
     password SYNC_PASSWORD.strip!
   end
 
-  package "sudo"
+  package 'sudo'
   
-  ruby_block "Add sync user to sudores to use oo-register-dns" do
+  ruby_block 'Add sync user to sudores to use oo-register-dns' do
     block do
       f = Chef::Util::FileEdit.new('/etc/sudoers')
       f.insert_line_if_no_match("^#{SYNC_USER}.*", "#{SYNC_USER}  ALL=(ALL) NOPASSWD:/sbin/oo-register-dns")

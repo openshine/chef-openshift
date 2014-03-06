@@ -17,11 +17,11 @@
 # limitations under the License.
 #
 
-template "/etc/sysctl.d/openshift.conf" do
-  source "node/sysctl.d/openshift.conf.erb"
+template '/etc/sysctl.d/openshift.conf' do
+  source 'node/sysctl.d/openshift.conf.erb'
   mode 0644
-  owner "root"
-  group "root"
+  owner 'root'
+  group 'root'
 end
 
-execute "sysctl -p /etc/sysctl.d/openshift.conf"
+execute 'sysctl -p /etc/sysctl.d/openshift.conf'

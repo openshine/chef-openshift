@@ -17,115 +17,115 @@
 # limitations under the License.
 #
 
-OPENSHIFT_DOMAIN = node["openshift"]["domain"]
-OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
+OPENSHIFT_DOMAIN = node['openshift']['domain']
+OPENSHIFT_BROKER_HOSTNAME = node['openshift']['broker']['hostname']
 
-case node["openshift"]["messaging"]["provider"]
-when "qpid"
-  package "mcollective-qpid-plugin"
-  package "qpid-cpp-server"
+case node['openshift']['messaging']['provider']
+when 'qpid'
+  package 'mcollective-qpid-plugin'
+  package 'qpid-cpp-server'
 
-  openshift_fwd "Enable qpid firewall" do
-    type "port"
+  openshift_fwd 'Enable qpid firewall' do
+    type 'port'
     port 5672
-    protocol "tcp"
+    protocol 'tcp'
     action :add
   end
 
-  service "qpidd" do
+  service 'qpidd' do
     supports status: true, restart: true, reload: true
     action [ :enable, :start ]
   end
-when "activemq"
-  case node["openshift"]["messaging"]["server"]["install_method"]
-  when "pkg"
-    package "activemq"
-    activemq_confdir = "/etc/activemq"
-  when "source"
-    include_recipe "activemq"
+when 'activemq'
+  case node['openshift']['messaging']['server']['install_method']
+  when 'pkg'
+    package 'activemq'
+    activemq_confdir = '/etc/activemq'
+  when 'source'
+    include_recipe 'activemq'
 
     version = node['activemq']['version']
     activemq_confdir = "#{node['activemq']['home']}/apache-activemq-#{version}/conf"
   end
 
-  case node["platform"]
-  when "fedora"
-    template "/etc/tmpfiles.d/activemq.conf" do
-      source "activemq/tmp-activemq.conf.erb"
+  case node['platform']
+  when 'fedora'
+    template '/etc/tmpfiles.d/activemq.conf' do
+      source 'activemq/tmp-activemq.conf.erb'
       mode 0755
-      owner "root"
-      group "root"
+      owner 'root'
+      group 'root'
     end
   end
 
-  directory "/var/run/activemq" do
-    owner "activemq"
-    group "activemq"
+  directory '/var/run/activemq' do
+    owner 'activemq'
+    group 'activemq'
     mode 00750
     action :create
   end
 
   template "#{activemq_confdir}/activemq.xml" do
-    source "activemq/activemq.xml.erb"
+    source 'activemq/activemq.xml.erb'
     mode 0444
-    owner "root"
-    group "root"
+    owner 'root'
+    group 'root'
     variables(node_fqdn: "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
-              mq_server_user: node["openshift"]["messaging"]["server"]["user"],
-              mq_server_password: node["openshift"]["messaging"]["server"]["password"]
+              mq_server_user: node['openshift']['messaging']['server']['user'],
+              mq_server_password: node['openshift']['messaging']['server']['password']
               )
   end
 
   template "#{activemq_confdir}/jetty.xml" do
-    source "activemq/jetty.xml.erb"
+    source 'activemq/jetty.xml.erb'
     mode 0444
-    owner "root"
-    group "root"
+    owner 'root'
+    group 'root'
   end
 
   template "#{activemq_confdir}/jetty-realm.properties" do
-    source "activemq/jetty-realm.properties.erb"
+    source 'activemq/jetty-realm.properties.erb'
     mode 0444
-    owner "root"
-    group "root"
-    variables(mq_server_password: node["openshift"]["messaging"]["server"]["password"])
+    owner 'root'
+    group 'root'
+    variables(mq_server_password: node['openshift']['messaging']['server']['password'])
   end
 
-  openshift_fwd "Enable activemq firewall" do
-    type "port"
+  openshift_fwd 'Enable activemq firewall' do
+    type 'port'
     port 616_13
-    protocol "tcp"
+    protocol 'tcp'
     action :add
   end
 
-  execute "Enable activemq firewall" do
-    cwd "/etc"
-    case node.set["openshift"]["firewall"]["provider"]
-    when "firewalld"
+  execute 'Enable activemq firewall' do
+    cwd '/etc'
+    case node.set['openshift']['firewall']['provider']
+    when 'firewalld'
       command "#{FW_ADD_PORT_CMD}61613/tcp"
-    when "lokkit"
+    when 'lokkit'
       command "#{FW_ADD_PORT_CMD}61613:tcp"
     end
   end
 
-  service "activemq" do
+  service 'activemq' do
     supports status: true, restart: true, reload: true
     action [ :enable, :start ]
   end
 
 end
 
-package "mcollective-client"
+package 'mcollective-client'
 
-template "/etc/mcollective/client.cfg" do
-  source "mcollective-client-cfg.erb"
+template '/etc/mcollective/client.cfg' do
+  source 'mcollective-client-cfg.erb'
   mode 0755
-  owner "root"
-  group "root"
-  variables(platform: node["platform"],
-            mq_provider: node["openshift"]["messaging"]["provider"],
+  owner 'root'
+  group 'root'
+  variables(platform: node['platform'],
+            mq_provider: node['openshift']['messaging']['provider'],
             mq_fqdn: "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
-            mq_server_user: node["openshift"]["messaging"]["server"]["user"],
-            mq_server_password: node["openshift"]["messaging"]["server"]["password"]
+            mq_server_user: node['openshift']['messaging']['server']['user'],
+            mq_server_password: node['openshift']['messaging']['server']['password']
             )
 end

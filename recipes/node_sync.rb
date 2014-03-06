@@ -17,25 +17,25 @@
 # limitations under the License.
 #
 
-OPENSHIFT_DOMAIN = node["openshift"]["domain"]
-OPENSHIFT_NODE_IP = node["openshift"]["node"]["ipaddress"] == "" ? node["ipaddress"] : node["openshift"]["node"]["ipaddress"]
-OPENSHIFT_NODE_HOSTNAME = node["openshift"]["node"]["hostname"]
-OPENSHIFT_BROKER_IP = node["openshift"]["broker"]["ipaddress"]
+OPENSHIFT_DOMAIN = node['openshift']['domain']
+OPENSHIFT_NODE_IP = node['openshift']['node']['ipaddress'] == '' ? node['ipaddress'] : node['openshift']['node']['ipaddress']
+OPENSHIFT_NODE_HOSTNAME = node['openshift']['node']['hostname']
+OPENSHIFT_BROKER_IP = node['openshift']['broker']['ipaddress']
 
-SYNC_ENABLE = node["openshift"]["sync"]["enable"]
-SYNC_USER = node["openshift"]["sync"]["user"]
-SYNC_PASSWORD = node["openshift"]["sync"]["password"]
-SYNC_HOME = node["openshift"]["sync"]["home"]
+SYNC_ENABLE = node['openshift']['sync']['enable']
+SYNC_USER = node['openshift']['sync']['user']
+SYNC_PASSWORD = node['openshift']['sync']['password']
+SYNC_HOME = node['openshift']['sync']['home']
 
 if SYNC_ENABLE
-  directory "/root/.ssh/" do
-    owner "root"
-    group "root"
+  directory '/root/.ssh/' do
+    owner 'root'
+    group 'root'
     mode 00700
     action :create
   end
 
-  chef_gem "net-sftp"
+  chef_gem 'net-sftp'
   ruby_block 'Save rsync_id_rsa.pub from broker' do
     block do
       require 'net/sftp'
@@ -43,18 +43,18 @@ if SYNC_ENABLE
                       SYNC_USER, password: SYNC_PASSWORD) do |sftp|
         data = sftp.download!("#{SYNC_HOME}/rsync_id_rsa.pub").strip!
 
-        if File.exists?("/root/.ssh/authorized_keys")
+        if File.exists?('/root/.ssh/authorized_keys')
           f = Chef::Util::FileEdit.new('/root/.ssh/authorized_keys')
           f.insert_line_if_no_match(data, data)
           f.write_file
         else
-          File.open("/root/.ssh/authorized_keys", "w+") { |file| file.write(data) }
+          File.open('/root/.ssh/authorized_keys', 'w+') { |file| file.write(data) }
         end
       end
     end
   end
 
-  chef_gem "net-ssh"
+  chef_gem 'net-ssh'
   ruby_block 'Register node domain at broker dns' do
     block do
       require 'net/ssh'

@@ -17,13 +17,13 @@
 # limitations under the License.
 #
 
-package "mongodb-server"
+package 'mongodb-server'
 
 ruby_block 'auth = true -> /etc/mongodb.conf' do
   block do
     f = Chef::Util::FileEdit.new('/etc/mongodb.conf')
-    f.search_file_replace("^auth *=.*$", "auth = true")
-    f.insert_line_if_no_match("^auth *=.*$", "auth = true")
+    f.search_file_replace('^auth *=.*$', 'auth = true')
+    f.insert_line_if_no_match('^auth *=.*$', 'auth = true')
     f.write_file
   end
 end
@@ -31,13 +31,13 @@ end
 ruby_block 'smallfiles = true -> /etc/mongodb.conf' do
   block do
     f = Chef::Util::FileEdit.new('/etc/mongodb.conf')
-    f.search_file_replace("^smallfiles *=.*$", "smallfiles = true")
-    f.insert_line_if_no_match("^smallfiles *=.*$", "smallfiles = true")
+    f.search_file_replace('^smallfiles *=.*$', 'smallfiles = true')
+    f.insert_line_if_no_match('^smallfiles *=.*$', 'smallfiles = true')
     f.write_file
   end
 end
 
-service "mongod" do
+service 'mongod' do
   supports status: true, restart: true, reload: true
   action [ :enable, :start ]
 end

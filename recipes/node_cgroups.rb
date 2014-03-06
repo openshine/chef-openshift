@@ -24,4 +24,4 @@
   end
 end
 
-execute "/usr/sbin/chkconfig openshift-cgroups on"
+execute '/usr/sbin/chkconfig openshift-cgroups on'
