@@ -9,10 +9,6 @@
 FavorUnlessOverNegatedIf:
   Enabled: false
 
-# Offence count: 7
-IndentationWidth:
-  Enabled: false
-
 # Offence count: 19
 # Cop supports --auto-correct.
 LeadingCommentSpace:
