@@ -70,9 +70,7 @@ ruby_block "create /var/named/#{OPENSHIFT_DOMAIN}.key template" do
     dns_key=""
     priv = Dir.glob("/var/named/K#{OPENSHIFT_DOMAIN}*.private")
     File.open(priv[0]).each do |line|
-      if line.start_with?("Key:")
-        dns_key = line.sub(/^Key: (.*)$/, '\1').strip!
-      end
+      dns_key = line.sub(/^Key: (.*)$/, '\1').strip! if line.start_with?("Key:")
     end
 
     res = Chef::Resource::Template.new "/var/named/#{OPENSHIFT_DOMAIN}.key", run_context

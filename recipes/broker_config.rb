@@ -63,9 +63,7 @@ ruby_block "create /etc/openshift/plugins.d/openshift-origin-dns-bind.conf templ
     dns_key=""
     priv = Dir.glob("/var/named/K#{OPENSHIFT_DOMAIN}*.private")
     File.open(priv[0]).each do |line|
-      if line.start_with?("Key:")
-        dns_key = line.sub(/^Key: (.*)$/, '\1').strip!
-      end
+      dns_key = line.sub(/^Key: (.*)$/, '\1').strip! if line.start_with?("Key:")
     end
 
     res = Chef::Resource::Template.new "/etc/openshift/plugins.d/openshift-origin-dns-bind.conf", run_context
