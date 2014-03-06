@@ -63,7 +63,7 @@ openshift_fwd "Enable proxy port firewall" do
 end
 
 service "openshift-port-proxy" do
- supports :status => true, :restart => true, :reload => true
+ supports status: true, restart: true, reload: true
  action [ :enable, :restart ]
 end
 
@@ -72,16 +72,16 @@ template "/etc/openshift/node.conf" do
   mode 0644
   owner "root"
   group "root"
-  variables(:domain => OPENSHIFT_DOMAIN,
-            :broker_ip => OPENSHIFT_BROKER_IP,
-            :node_ip => OPENSHIFT_NODE_IP,
-            :node_fqdn => "#{OPENSHIFT_NODE_HOSTNAME}.#{OPENSHIFT_DOMAIN}"
+  variables(domain: OPENSHIFT_DOMAIN,
+            broker_ip: OPENSHIFT_BROKER_IP,
+            node_ip: OPENSHIFT_NODE_IP,
+            node_fqdn: "#{OPENSHIFT_NODE_HOSTNAME}.#{OPENSHIFT_DOMAIN}"
             )
 end
 
 execute "/etc/cron.minutely/openshift-facts"
 
 service "openshift-gears" do
- supports :status => true, :restart => true, :reload => true
+ supports status: true, restart: true, reload: true
  action [ :enable, :restart ]
 end

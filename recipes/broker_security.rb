@@ -21,7 +21,7 @@ OPENSHIFT_DOMAIN = node["openshift"]["domain"]
 OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
 
 service "sshd" do
-  supports :status => true, :restart => true, :reload => true
+  supports status: true, restart: true, reload: true
   action [ :enable, :start ]
 end
 

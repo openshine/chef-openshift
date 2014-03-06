@@ -30,8 +30,8 @@ if node["openshift"]["avahi"]["enable"]
     mode 0644
     owner "root"
     group "root"
-    variables(:hostname => OPENSHIFT_BROKER_HOSTNAME,
-              :domain => "#{OPENSHIFT_DOMAIN}.local")
+    variables(hostname: OPENSHIFT_BROKER_HOSTNAME,
+              domain: "#{OPENSHIFT_DOMAIN}.local")
   end
 
   template "/etc/avahi/cname-manager.conf" do
@@ -39,12 +39,12 @@ if node["openshift"]["avahi"]["enable"]
     mode 0644
     owner "root"
     group "root"
-    variables(:hostname => OPENSHIFT_BROKER_HOSTNAME,
-              :domain => "#{OPENSHIFT_DOMAIN}.local")
+    variables(hostname: OPENSHIFT_BROKER_HOSTNAME,
+              domain: "#{OPENSHIFT_DOMAIN}.local")
   end
 
   service "avahi-daemon" do
-    supports :status => true, :restart => true, :reload => true
+    supports status: true, restart: true, reload: true
     action [ :enable, :restart ]
   end
 end

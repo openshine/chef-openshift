@@ -69,11 +69,11 @@ execute "Bundle broker install" do
 end
 
 service "httpd" do
-  supports :status => true, :restart => true, :reload => true
+  supports status: true, restart: true, reload: true
   action [ :enable, :start ]
 end
 
 service "openshift-broker" do
-  supports :status => true, :restart => true, :reload => true
+  supports status: true, restart: true, reload: true
   action [ :enable, :start ]
 end

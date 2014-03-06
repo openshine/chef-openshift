@@ -38,6 +38,6 @@ ruby_block 'smallfiles = true -> /etc/mongodb.conf' do
 end
 
 service "mongod" do
-  supports :status => true, :restart => true, :reload => true
+  supports status: true, restart: true, reload: true
   action [ :enable, :start ]
 end

@@ -18,7 +18,7 @@
 #
 
 service "sshd" do
-  supports :status => true, :restart => true, :reload => true
+  supports status: true, restart: true, reload: true
   action [ :enable, :start ]
 end
 
@@ -77,7 +77,7 @@ end
 end
 
 service "sshd" do
-  supports :status => true, :restart => true, :reload => true
+  supports status: true, restart: true, reload: true
   action [ :restart ]
 end
 

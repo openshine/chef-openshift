@@ -52,7 +52,7 @@ template "/var/named/forwarders.conf" do
   mode 0755
   owner "named"
   group "named"
-  variables(:ip_list => node["openshift"]["named"]["forwarders"])
+  variables(ip_list: node["openshift"]["named"]["forwarders"])
 end
 
 execute "restorecon -v /var/named/forwarders.conf"
@@ -62,7 +62,7 @@ template "/var/named/dynamic/#{OPENSHIFT_DOMAIN}.db" do
   mode 0755
   owner "named"
   group "named"
-  variables(:domain => OPENSHIFT_DOMAIN)
+  variables(domain: OPENSHIFT_DOMAIN)
 end
 
 ruby_block "create /var/named/#{OPENSHIFT_DOMAIN}.key template" do
@@ -79,8 +79,8 @@ ruby_block "create /var/named/#{OPENSHIFT_DOMAIN}.key template" do
     res.group "named"
     res.mode "750"
     res.cookbook "openshift"
-    res.variables(:domain => OPENSHIFT_DOMAIN,
-                  :key => dns_key
+    res.variables(domain: OPENSHIFT_DOMAIN,
+                  key: dns_key
                   )
     res.run_action :create
   end
@@ -93,7 +93,7 @@ template "/etc/named.conf" do
   mode 0755
   owner "root"
   group "named"
-  variables(:domain => OPENSHIFT_DOMAIN)
+  variables(domain: OPENSHIFT_DOMAIN)
 end
 
 execute "restorecon /etc/named.conf"
@@ -105,7 +105,7 @@ openshift_fwd "Enable dns firewall" do
 end
 
 service "named" do
- supports :status => true, :restart => true, :reload => true
+ supports status: true, restart: true, reload: true
  action [ :enable, :start ]
 end
 

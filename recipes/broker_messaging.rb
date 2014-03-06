@@ -33,7 +33,7 @@ when "qpid"
   end
 
   service "qpidd" do
-    supports :status => true, :restart => true, :reload => true
+    supports status: true, restart: true, reload: true
     action [ :enable, :start ]
   end
 when "activemq"
@@ -70,9 +70,9 @@ when "activemq"
     mode 0444
     owner "root"
     group "root"
-    variables(:node_fqdn => "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
-              :mq_server_user => node["openshift"]["messaging"]["server"]["user"],
-              :mq_server_password => node["openshift"]["messaging"]["server"]["password"]
+    variables(node_fqdn: "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
+              mq_server_user: node["openshift"]["messaging"]["server"]["user"],
+              mq_server_password: node["openshift"]["messaging"]["server"]["password"]
               )
   end
 
@@ -88,7 +88,7 @@ when "activemq"
     mode 0444
     owner "root"
     group "root"
-    variables(:mq_server_password => node["openshift"]["messaging"]["server"]["password"])
+    variables(mq_server_password: node["openshift"]["messaging"]["server"]["password"])
   end
 
   openshift_fwd "Enable activemq firewall" do
@@ -109,7 +109,7 @@ when "activemq"
   end
 
   service "activemq" do
-    supports :status => true, :restart => true, :reload => true
+    supports status: true, restart: true, reload: true
     action [ :enable, :start ]
   end
 
@@ -122,10 +122,10 @@ template "/etc/mcollective/client.cfg" do
   mode 0755
   owner "root"
   group "root"
-  variables(:platform => node["platform"],
-            :mq_provider => node["openshift"]["messaging"]["provider"],
-            :mq_fqdn => "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
-            :mq_server_user => node["openshift"]["messaging"]["server"]["user"],
-            :mq_server_password => node["openshift"]["messaging"]["server"]["password"]
+  variables(platform: node["platform"],
+            mq_provider: node["openshift"]["messaging"]["provider"],
+            mq_fqdn: "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
+            mq_server_user: node["openshift"]["messaging"]["server"]["user"],
+            mq_server_password: node["openshift"]["messaging"]["server"]["password"]
             )
 end

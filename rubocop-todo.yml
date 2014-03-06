@@ -9,12 +9,6 @@
 FavorUnlessOverNegatedIf:
   Enabled: false
 
-# Offence count: 83
-# Cop supports --auto-correct.
-# Configuration parameters: SupportedStyles.
-HashSyntax:
-  EnforcedStyle: hash_rockets
-
 # Offence count: 7
 IndentationWidth:
   Enabled: false

@@ -37,9 +37,9 @@ template "/etc/httpd/conf.d/000002_openshift_origin_broker_chef.conf" do
   owner "apache"
   group "apache"
   variables ({
-               :docroot => "/var/www/html",
-               :server_name => "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
-               :server_aliases => ["#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}.local"]
+               docroot: "/var/www/html",
+               server_name: "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
+               server_aliases: ["#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}.local"]
              })
 end
 
@@ -72,9 +72,9 @@ ruby_block "create /etc/openshift/plugins.d/openshift-origin-dns-bind.conf templ
     res.group "root"
     res.mode "644"
     res.cookbook "openshift"
-    res.variables(:domain => OPENSHIFT_DOMAIN,
-                  :ip => "127.0.0.1",
-                  :key => dns_key
+    res.variables(domain: OPENSHIFT_DOMAIN,
+                  ip: "127.0.0.1",
+                  key: dns_key
                   )
     res.run_action :create
   end

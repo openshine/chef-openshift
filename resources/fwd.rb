@@ -16,11 +16,11 @@
 
 actions :add
 
-attribute :type, :kind_of => String
-attribute :service, :kind_of => String
-attribute :port, :kind_of => Integer
-attribute :portrange, :kind_of => String
-attribute :protocol, :kind_of => String
+attribute :type, kind_of: String
+attribute :service, kind_of: String
+attribute :port, kind_of: Integer
+attribute :portrange, kind_of: String
+attribute :protocol, kind_of: String
 
 def initialize(name, run_context=nil)
   super
