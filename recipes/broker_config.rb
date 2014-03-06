@@ -72,10 +72,10 @@ ruby_block "create /etc/openshift/plugins.d/openshift-origin-dns-bind.conf templ
     res.group "root"
     res.mode "644"
     res.cookbook "openshift"
-    res.variables({ :domain => OPENSHIFT_DOMAIN,
-                    :ip => "127.0.0.1",
-                    :key => dns_key
-                  })
+    res.variables(:domain => OPENSHIFT_DOMAIN,
+                  :ip => "127.0.0.1",
+                  :key => dns_key
+                  )
     res.run_action :create
   end
 end
