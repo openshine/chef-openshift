@@ -26,11 +26,6 @@ ParenthesesAsGroupedExpression:
 SpaceInsideBrackets:
   Enabled: false
 
-# Offence count: 2
-# Cop supports --auto-correct.
-TrailingBlankLines:
-  Enabled: false
-
 # Offence count: 1
 # Cop supports --auto-correct.
 TrailingWhitespace:

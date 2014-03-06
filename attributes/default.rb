@@ -35,5 +35,3 @@ default['openshift']['sync']['home'] = '/home/oshiftsync'
 
 # openshift avahi support
 default['openshift']['avahi']['enable'] = false
-
-
