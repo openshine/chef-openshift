@@ -17,32 +17,32 @@
 # limitations under the License.
 #
 
-OPENSHIFT_DOMAIN = node["openshift"]["domain"]
-OPENSHIFT_NODE_HOSTNAME = node["openshift"]["node"]["hostname"]
-OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
+OPENSHIFT_DOMAIN = node['openshift']['domain']
+OPENSHIFT_NODE_HOSTNAME = node['openshift']['node']['hostname']
+OPENSHIFT_BROKER_HOSTNAME = node['openshift']['broker']['hostname']
 
-case node["openshift"]["messaging"]["provider"]
-when "qpid"
-  package "openshift-origin-msg-node-mcollective"
-  package "mcollective-qpid-plugin"
-  package "mcollective"
+case node['openshift']['messaging']['provider']
+when 'qpid'
+  package 'openshift-origin-msg-node-mcollective'
+  package 'mcollective-qpid-plugin'
+  package 'mcollective'
 
-  template "/etc/mcollective/server.cfg" do
-    source "mcollective-server-cfg.erb"
+  template '/etc/mcollective/server.cfg' do
+    source 'mcollective-server-cfg.erb'
     mode 0755
-    owner "root"
-    group "root"
-    variables({ :platform => node["platform"],
-                :mq_provider => node["openshift"]["messaging"]["provider"],
-                :mq_fqdn => "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
-                :mq_node_fqdn => "#{OPENSHIFT_NODE_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
-                :mq_server_user => node["openshift"]["messaging"]["server"]["user"],
-                :mq_server_password => node["openshift"]["messaging"]["server"]["password"]
-              })
+    owner 'root'
+    group 'root'
+    variables(platform: node['platform'],
+              mq_provider: node['openshift']['messaging']['provider'],
+              mq_fqdn: "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
+              mq_node_fqdn: "#{OPENSHIFT_NODE_HOSTNAME}.#{OPENSHIFT_DOMAIN}",
+              mq_server_user: node['openshift']['messaging']['server']['user'],
+              mq_server_password: node['openshift']['messaging']['server']['password']
+              )
   end
 end
 
-service "mcollective" do
-  supports :status => true, :restart => true, :reload => true
+service 'mcollective' do
+  supports status: true, restart: true, reload: true
   action [ :enable, :start ]
 end

@@ -19,9 +19,9 @@
 
 %w{cgconfig cgred cgred}.each do |serv|
   service serv do
-    supports :status => true, :restart => true, :reload => true
+    supports status: true, restart: true, reload: true
     action [ :enable, :restart ]
   end
 end
 
-execute "/usr/sbin/chkconfig openshift-cgroups on"
+execute '/usr/sbin/chkconfig openshift-cgroups on'

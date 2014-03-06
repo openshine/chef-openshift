@@ -19,7 +19,7 @@
 
 ruby_block 'Tweak /etc/fstab to add support for user quotas' do
   block do
-    FS=`LANG=C df /var/lib | grep -v Filesystem | awk '{print $6}'`.strip!
+    FS = `LANG=C df /var/lib | grep -v Filesystem | awk '{print $6}'`.strip!
     if not system("grep \"[[:space:]]#{FS}[[:space:]] .*usrquota\" /etc/fstab > /dev/null")
       system("sed -e \"s|^\\S*\\s\\+#{FS}\\s\\+\\S*\\s\\+|&usrquota,|\" -i /etc/fstab")
       system("mount -o remount #{FS}")

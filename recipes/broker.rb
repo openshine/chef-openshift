@@ -17,24 +17,24 @@
 # limitations under the License.
 #
 
-OPENSHIFT_DOMAIN = node["openshift"]["domain"]
-OPENSHIFT_BROKER_IP = node["openshift"]["broker"]["ipaddress"] == "" ? node["ipaddress"] : node["openshift"]["broker"]["ipaddress"]
-OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
+OPENSHIFT_DOMAIN = node['openshift']['domain']
+OPENSHIFT_BROKER_IP = node['openshift']['broker']['ipaddress'] == '' ? node['ipaddress'] : node['openshift']['broker']['ipaddress']
+OPENSHIFT_BROKER_HOSTNAME = node['openshift']['broker']['hostname']
 
 hostsfile_entry OPENSHIFT_BROKER_IP do
   hostname "#{OPENSHIFT_BROKER_HOSTNAME}.#{OPENSHIFT_DOMAIN}"
-  comment "openshift broker"
+  comment 'openshift broker'
   action    :append
 end
 
-include_recipe "ntp"
-include_recipe "openshift::nightly"
-include_recipe "openshift::broker_sync"
-include_recipe "openshift::broker_avahi"
-include_recipe "openshift::broker_named"
-include_recipe "openshift::broker_dhcp"
-include_recipe "openshift::broker_mongodb"
-include_recipe "openshift::broker_messaging"
+include_recipe 'ntp'
+include_recipe 'openshift::nightly'
+include_recipe 'openshift::broker_sync'
+include_recipe 'openshift::broker_avahi'
+include_recipe 'openshift::broker_named'
+include_recipe 'openshift::broker_dhcp'
+include_recipe 'openshift::broker_mongodb'
+include_recipe 'openshift::broker_messaging'
 
 %w{openshift-origin-broker
    openshift-origin-broker-util
@@ -45,35 +45,35 @@ include_recipe "openshift::broker_messaging"
   package pkg
 end
 
-include_recipe "openshift::broker_security"
-include_recipe "openshift::broker_config"
+include_recipe 'openshift::broker_security'
+include_recipe 'openshift::broker_config'
 
-if node["platform"] == "fedora" and node["platform_version"] == "18"
-  package "libyaml-devel"
-  gem_package "psych"
-  gem_package "minitest" do
-    version "3.2.0"
+if node['platform'] == 'fedora' && node['platform_version'] == '18'
+  package 'libyaml-devel'
+  gem_package 'psych'
+  gem_package 'minitest' do
+    version '3.2.0'
     action :install
   end
 else
-  package "rubygem-psych"
+  package 'rubygem-psych'
 end
 
-gem_package "mongoid"
-gem_package "mocha"
+gem_package 'mongoid'
+gem_package 'mocha'
 
-execute "Bundle broker install" do
-  cwd "/var/www/openshift/broker"
-  user "root"
-  command "bundle --local"
+execute 'Bundle broker install' do
+  cwd '/var/www/openshift/broker'
+  user 'root'
+  command 'bundle --local'
 end
 
-service "httpd" do
-  supports :status => true, :restart => true, :reload => true
+service 'httpd' do
+  supports status: true, restart: true, reload: true
   action [ :enable, :start ]
 end
 
-service "openshift-broker" do
-  supports :status => true, :restart => true, :reload => true
+service 'openshift-broker' do
+  supports status: true, restart: true, reload: true
   action [ :enable, :start ]
 end

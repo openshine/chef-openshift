@@ -17,20 +17,20 @@
 # limitations under the License.
 #
 
-DNS_IP = node["openshift"]["dhcp"]["prepend_dns"] == "" ? node["openshift"]["broker"]["ipaddress"] : node["openshift"]["dhcp"]["prepend_dns"]
+DNS_IP = node['openshift']['dhcp']['prepend_dns'] == '' ? node['openshift']['broker']['ipaddress'] : node['openshift']['dhcp']['prepend_dns']
 
-if node["openshift"]["dhcp"]["enable"]
+if node['openshift']['dhcp']['enable']
   ruby_block 'preprend openshift-node dns at dhclient.conf' do
     block do
-      if File.exists?("/etc/dhcp/dhclient.conf")
+      if File.exists?('/etc/dhcp/dhclient.conf')
         f = Chef::Util::FileEdit.new('/etc/dhcp/dhclient.conf')
         f.insert_line_if_no_match("prepend.*domain-name-servers.*#{DNS_IP};", "prepend domain-name-servers #{DNS_IP};")
         f.write_file
       else
-        File.open("/etc/dhcp/dhclient.conf", "w+") { |file| file.write("prepend domain-name-servers #{DNS_IP};") }
+        File.open('/etc/dhcp/dhclient.conf', 'w+') { |file| file.write("prepend domain-name-servers #{DNS_IP};") }
       end
     end
   end
-  execute "dhclient -r"
-  execute "dhclient"
+  execute 'dhclient -r'
+  execute 'dhclient'
 end

@@ -17,102 +17,100 @@
 # limitations under the License.
 #
 
-OPENSHIFT_DOMAIN = node["openshift"]["domain"]
-OPENSHIFT_BROKER_IP = node["openshift"]["broker"]["ipaddress"] == "" ? node["ipaddress"] : node["openshift"]["broker"]["ipaddress"]
-OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
+OPENSHIFT_DOMAIN = node['openshift']['domain']
+OPENSHIFT_BROKER_IP = node['openshift']['broker']['ipaddress'] == '' ? node['ipaddress'] : node['openshift']['broker']['ipaddress']
+OPENSHIFT_BROKER_HOSTNAME = node['openshift']['broker']['hostname']
 
-package "bind"
-package "bind-utils"
-package "openshift-origin-broker-util"
+package 'bind'
+package 'bind-utils'
+package 'openshift-origin-broker-util'
 
-execute "dnssec-keygen" do
-  cwd "/var/named"
-  user "root"
+execute 'dnssec-keygen' do
+  cwd '/var/named'
+  user 'root'
   command "dnssec-keygen -a HMAC-MD5 -b 512 -n USER -r /dev/urandom #{OPENSHIFT_DOMAIN}"
   not_if { Dir.glob("K*#{OPENSHIFT_DOMAIN}.private").length > 0 }
 end
 
-execute "rndc-confgen" do
-   cwd "/var/named"
-   user "root"
-   command "rndc-confgen -a -r /dev/urandom"
-   not_if { ::File.exists?("/etc/rndc.key") }
+execute 'rndc-confgen' do
+  cwd '/var/named'
+  user 'root'
+  command 'rndc-confgen -a -r /dev/urandom'
+  not_if { ::File.exists?('/etc/rndc.key') }
 end
 
-execute "restorecon -v /etc/rndc.* /etc/named.*"
+execute 'restorecon -v /etc/rndc.* /etc/named.*'
 
-file "/etc/rndc.key" do
-  owner "root"
-  group "named"
-  mode "640"
+file '/etc/rndc.key' do
+  owner 'root'
+  group 'named'
+  mode '640'
 end
 
-template "/var/named/forwarders.conf" do
-  source "named/forwarders.conf.erb"
+template '/var/named/forwarders.conf' do
+  source 'named/forwarders.conf.erb'
   mode 0755
-  owner "named"
-  group "named"
-  variables({ :ip_list => node["openshift"]["named"]["forwarders"] })
+  owner 'named'
+  group 'named'
+  variables(ip_list: node['openshift']['named']['forwarders'])
 end
 
-execute "restorecon -v /var/named/forwarders.conf"
+execute 'restorecon -v /var/named/forwarders.conf'
 
 template "/var/named/dynamic/#{OPENSHIFT_DOMAIN}.db" do
-  source "named/dynamic-domain.db.erb"
+  source 'named/dynamic-domain.db.erb'
   mode 0755
-  owner "named"
-  group "named"
-  variables({ :domain => OPENSHIFT_DOMAIN })
+  owner 'named'
+  group 'named'
+  variables(domain: OPENSHIFT_DOMAIN)
 end
 
 ruby_block "create /var/named/#{OPENSHIFT_DOMAIN}.key template" do
   block do
-    dns_key=""
+    dns_key = ''
     priv = Dir.glob("/var/named/K#{OPENSHIFT_DOMAIN}*.private")
     File.open(priv[0]).each do |line|
-      if line.start_with?("Key:")
-        dns_key = line.sub(/^Key: (.*)$/, '\1').strip!
-      end
+      dns_key = line.sub(/^Key: (.*)$/, '\1').strip! if line.start_with?('Key:')
     end
 
     res = Chef::Resource::Template.new "/var/named/#{OPENSHIFT_DOMAIN}.key", run_context
-    res.source "named/domain-key.erb"
-    res.owner "named"
-    res.group "named"
-    res.mode "750"
-    res.cookbook "openshift"
-    res.variables({ :domain => OPENSHIFT_DOMAIN,
-                    :key => dns_key
-                  })
+    res.source 'named/domain-key.erb'
+    res.owner 'named'
+    res.group 'named'
+    res.mode '750'
+    res.cookbook 'openshift'
+    res.variables(domain: OPENSHIFT_DOMAIN,
+                  key: dns_key
+                 )
     res.run_action :create
   end
 end
 
-execute "restorecon -rv /var/named"
+execute 'restorecon -rv /var/named'
 
-template "/etc/named.conf" do
-  source "named/named.conf.erb"
+template '/etc/named.conf' do
+  source 'named/named.conf.erb'
   mode 0755
-  owner "root"
-  group "named"
-  variables({ :domain => OPENSHIFT_DOMAIN })
+  owner 'root'
+  group 'named'
+  variables(domain: OPENSHIFT_DOMAIN)
 end
 
-execute "restorecon /etc/named.conf"
+execute 'restorecon /etc/named.conf'
 
-openshift_fwd "Enable dns firewall" do
-  type "service"
-  service "dns"
+openshift_fwd 'Enable dns firewall' do
+  type 'service'
+  service 'dns'
   action :add
 end
 
-service "named" do
- supports :status => true, :restart => true, :reload => true
- action [ :enable, :start ]
+service 'named' do
+  supports status: true, restart: true, reload: true
+  action [ :enable, :start ]
 end
 
-execute "nsupdate" do
-  cwd "/var/named"
-  user "root"
+execute 'nsupdate' do
+  cwd '/var/named'
+  user 'root'
   command "oo-register-dns -s 127.0.0.1 -h #{OPENSHIFT_BROKER_HOSTNAME} -d #{OPENSHIFT_DOMAIN} -n #{OPENSHIFT_BROKER_IP} -k /var/named/#{OPENSHIFT_DOMAIN}.key"
 end

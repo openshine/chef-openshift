@@ -17,71 +17,71 @@
 require 'fileutils'
 
 action :add do
-  fwd = ""
-  if ::File.exists?("/usr/bin/firewall-cmd")
-    fwd = "firewalld"
-  elsif ::File.exists?("/usr/sbin/lokkit")
-    fwd = "lokkit"
+  fwd = ''
+  if ::File.exists?('/usr/bin/firewall-cmd')
+    fwd = 'firewalld'
+  elsif ::File.exists?('/usr/sbin/lokkit')
+    fwd = 'lokkit'
   end
 
   case fwd
-  when ""
+  when ''
     log "There isn't firewall client"
-  when "firewalld"
+  when 'firewalld'
     case @new_resource.type
-    when "service"
+    when 'service'
       service = @new_resource.service
       execute "Add #{service} service to firewall" do
-        user "root"
+        user 'root'
         command "/usr/bin/firewall-cmd --add-service=#{service}"
       end
       execute "Add #{service} service to firewall permanently" do
-        user "root"
+        user 'root'
         command "/usr/bin/firewall-cmd --permanent --add-service=#{service}"
       end
-    when "port"
+    when 'port'
       port = @new_resource.port
       protocol = @new_resource.protocol
       execute "Add #{port}/#{protocol} to firewall" do
-        user "root"
+        user 'root'
         command "/usr/bin/firewall-cmd --add-port=#{port}/#{protocol}"
       end
       execute "Add #{port}/#{protocol} to firewall permanently" do
-        user "root"
+        user 'root'
         command "/usr/bin/firewall-cmd --permanent --add-port=#{port}/#{protocol}"
       end
-    when "portrange"
+    when 'portrange'
       port = @new_resource.portrange
       protocol = @new_resource.protocol
       execute "Add #{port}/#{protocol} to firewall" do
-        user "root"
+        user 'root'
         command "/usr/bin/firewall-cmd --add-port=#{port}/#{protocol}"
       end
       execute "Add #{port}/#{protocol} to firewall permanently" do
-        user "root"
+        user 'root'
         command "/usr/bin/firewall-cmd --permanent --add-port=#{port}/#{protocol}"
       end
     end
-  when "lokkit"
+  when 'lokkit'
     case @new_resource.type
-    when "service"
+    when 'service'
       service = @new_resource.service
       execute "Add #{service} service to firewall" do
-        user "root"
+        user 'root'
         command "/usr/sbin/lokkit --service=#{service}"
       end
-    when "port"
+    when 'port'
       port = @new_resource.port
       protocol = @new_resource.protocol
       execute "Add #{port}/#{protocol} to firewall" do
-        user "root"
+        user 'root'
         command "/usr/sbin/lokkit --port=#{port}:#{protocol}"
       end
-    when "portrange"
+    when 'portrange'
       port = @new_resource.portrange
       protocol = @new_resource.protocol
       execute "Add #{port}/#{protocol} to firewall" do
-        user "root"
+        user 'root'
         command "/usr/sbin/lokkit --port=#{port}:#{protocol}"
       end
     end
