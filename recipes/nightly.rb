@@ -20,7 +20,7 @@
 if node["openshift"]["nightly"]["enable"]
   include_recipe "yum"
 
-  #Register yum repositories
+  # Register yum repositories
   yum_repository "openshift-nightly-deps" do
     description "openshift"
     case node["platform"]

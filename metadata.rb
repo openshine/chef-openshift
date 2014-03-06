@@ -11,5 +11,5 @@ version          "0.0.1"
 end
 
 %w{ redhat fedora }.each do |os|
-    supports os
+  supports os
 end

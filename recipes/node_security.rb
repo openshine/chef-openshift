@@ -57,7 +57,7 @@ openshift_fwd "Enable https firewall" do
   action :add
 end
 
-#PAM configuration
+# PAM configuration
 ruby_block "Tweak /etc/pam.d/sshd" do
   block do
     f = Chef::Util::FileEdit.new("/etc/pam.d/sshd")
@@ -81,7 +81,7 @@ service "sshd" do
   action [ :restart ]
 end
 
-#SELinux
+# SELinux
 execute "set selinux policies" do
   cwd "/etc"
   user "root"

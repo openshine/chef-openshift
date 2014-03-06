@@ -33,10 +33,10 @@ execute "dnssec-keygen" do
 end
 
 execute "rndc-confgen" do
-   cwd "/var/named"
-   user "root"
-   command "rndc-confgen -a -r /dev/urandom"
-   not_if { ::File.exists?("/etc/rndc.key") }
+  cwd "/var/named"
+  user "root"
+  command "rndc-confgen -a -r /dev/urandom"
+  not_if { ::File.exists?("/etc/rndc.key") }
 end
 
 execute "restorecon -v /etc/rndc.* /etc/named.*"
@@ -81,7 +81,7 @@ ruby_block "create /var/named/#{OPENSHIFT_DOMAIN}.key template" do
     res.cookbook "openshift"
     res.variables(domain: OPENSHIFT_DOMAIN,
                   key: dns_key
-                  )
+                 )
     res.run_action :create
   end
 end
@@ -105,8 +105,8 @@ openshift_fwd "Enable dns firewall" do
 end
 
 service "named" do
- supports status: true, restart: true, reload: true
- action [ :enable, :start ]
+  supports status: true, restart: true, reload: true
+  action [ :enable, :start ]
 end
 
 execute "nsupdate" do

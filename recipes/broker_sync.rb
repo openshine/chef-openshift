@@ -27,8 +27,8 @@ SYNC_HOME = node["openshift"]["sync"]["home"]
 if SYNC_ENABLE
   user SYNC_USER do
     comment "Openshift sync user"
-    uid #{SYNC_UID}
-    gid #{SYNC_GID}
+    uid # {SYNC_UID}
+    gid # {SYNC_GID}
     home SYNC_HOME
     shell "/bin/bash"
     password SYNC_PASSWORD.strip!

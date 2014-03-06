@@ -43,19 +43,19 @@ openshift_fwd "Enable https firewall" do
   action :add
 end
 
-#Ssl certs
+# Ssl certs
 execute "generate ssl private key" do
-   cwd "/etc/openshift"
-   user "root"
-   command "openssl genrsa -out /etc/openshift/server_priv.pem 2048"
-   not_if { ::File.exists?("/etc/openshift/server_priv.pem") }
+  cwd "/etc/openshift"
+  user "root"
+  command "openssl genrsa -out /etc/openshift/server_priv.pem 2048"
+  not_if { ::File.exists?("/etc/openshift/server_priv.pem") }
 end
 
 execute "generate ssl public key" do
-   cwd "/etc/openshift"
-   user "root"
-   command "openssl rsa -in /etc/openshift/server_priv.pem -pubout > /etc/openshift/server_pub.pem"
-   not_if { ::File.exists?("/etc/openshift/server_pub.pem") }
+  cwd "/etc/openshift"
+  user "root"
+  command "openssl rsa -in /etc/openshift/server_priv.pem -pubout > /etc/openshift/server_pub.pem"
+  not_if { ::File.exists?("/etc/openshift/server_pub.pem") }
 end
 
 execute "generate rsync ssh keys" do
@@ -79,7 +79,7 @@ execute "copy rsync public ssh keys to openshift sync user" do
   only_if { node["openshift"]["sync"]["enable"] }
 end
 
-#Selinux settings
+# Selinux settings
 execute "set selinux policies" do
   cwd "/etc/openshift"
   user "root"

@@ -20,7 +20,7 @@
 OPENSHIFT_DOMAIN = node["openshift"]["domain"]
 OPENSHIFT_BROKER_HOSTNAME = node["openshift"]["broker"]["hostname"]
 
-#Tweak /etc/openshift/broker.conf
+# Tweak /etc/openshift/broker.conf
 ruby_block 'Tweak /etc/openshift/broker.conf' do
   block do
     f = Chef::Util::FileEdit.new('etc/openshift/broker.conf')
@@ -30,7 +30,7 @@ ruby_block 'Tweak /etc/openshift/broker.conf' do
   end
 end
 
-#configure apache site
+# configure apache site
 template "/etc/httpd/conf.d/000002_openshift_origin_broker_chef.conf" do
   source "apache2/openshift-broker.conf.erb"
   mode 0644
@@ -43,7 +43,7 @@ template "/etc/httpd/conf.d/000002_openshift_origin_broker_chef.conf" do
              })
 end
 
-#broker plugins and MongoDB user accounts
+# broker plugins and MongoDB user accounts
 execute "openshift-origin-auth-remote-user plugin conf" do
   cwd "/etc/openshift"
   user "root"
