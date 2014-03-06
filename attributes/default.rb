@@ -29,8 +29,8 @@ default["openshift"]["messaging"]["server"]["install_method"] = "pkg"
 default["openshift"]["sync"]["enable"] = false
 default["openshift"]["sync"]["user"] = "oshiftsync"
 default["openshift"]["sync"]["password"] = "oshiftsync"
-default["openshift"]["sync"]["uid"] = 59012
-default["openshift"]["sync"]["gid"] = 59012
+default["openshift"]["sync"]["uid"] = 59_012
+default["openshift"]["sync"]["gid"] = 59_012
 default["openshift"]["sync"]["home"] = "/home/oshiftsync"
 
 #openshift avahi support

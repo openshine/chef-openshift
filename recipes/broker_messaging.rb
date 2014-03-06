@@ -93,7 +93,7 @@ when "activemq"
 
   openshift_fwd "Enable activemq firewall" do
     type "port"
-    port 61613
+    port 616_13
     protocol "tcp"
     action :add
   end
