@@ -27,10 +27,5 @@ SpaceInsideBrackets:
   Enabled: false
 
 # Offence count: 1
-# Cop supports --auto-correct.
-TrailingWhitespace:
-  Enabled: false
-
-# Offence count: 1
 UselessAssignment:
   Enabled: false

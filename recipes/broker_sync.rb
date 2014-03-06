@@ -35,7 +35,7 @@ if SYNC_ENABLE
   end
 
   package 'sudo'
-  
+
   ruby_block 'Add sync user to sudores to use oo-register-dns' do
     block do
       f = Chef::Util::FileEdit.new('/etc/sudoers')
