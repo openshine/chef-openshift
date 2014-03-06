@@ -21,16 +21,6 @@ Not:
 ParenthesesAsGroupedExpression:
   Enabled: false
 
-# Offence count: 1
-# Cop supports --auto-correct.
-SpaceAroundEqualsInParameterDefault:
-  Enabled: false
-
-# Offence count: 3
-# Cop supports --auto-correct.
-SpaceAroundOperators:
-  Enabled: false
-
 # Offence count: 28
 # Cop supports --auto-correct.
 SpaceInsideBrackets:

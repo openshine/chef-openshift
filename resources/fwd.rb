@@ -22,7 +22,7 @@ attribute :port, kind_of: Integer
 attribute :portrange, kind_of: String
 attribute :protocol, kind_of: String
 
-def initialize(name, run_context=nil)
+def initialize(name, run_context = nil)
   super
   @action = :add
 end

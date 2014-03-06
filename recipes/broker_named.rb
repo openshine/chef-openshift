@@ -67,7 +67,7 @@ end
 
 ruby_block "create /var/named/#{OPENSHIFT_DOMAIN}.key template" do
   block do
-    dns_key=""
+    dns_key = ""
     priv = Dir.glob("/var/named/K#{OPENSHIFT_DOMAIN}*.private")
     File.open(priv[0]).each do |line|
       dns_key = line.sub(/^Key: (.*)$/, '\1').strip! if line.start_with?("Key:")
