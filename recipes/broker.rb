@@ -48,7 +48,7 @@ end
 include_recipe "openshift::broker_security"
 include_recipe "openshift::broker_config"
 
-if node["platform"] == "fedora" and node["platform_version"] == "18"
+if node["platform"] == "fedora" && node["platform_version"] == "18"
   package "libyaml-devel"
   gem_package "psych"
   gem_package "minitest" do
