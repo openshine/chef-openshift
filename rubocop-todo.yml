@@ -17,18 +17,8 @@ LineLength:
 Not:
   Enabled: false
 
-# Offence count: 3
-# Cop supports --auto-correct.
-NumericLiterals:
-  MinDigits: 5
-
 # Offence count: 1
 ParenthesesAsGroupedExpression:
-  Enabled: false
-
-# Offence count: 1
-# Cop supports --auto-correct.
-SpaceAfterComma:
   Enabled: false
 
 # Offence count: 1

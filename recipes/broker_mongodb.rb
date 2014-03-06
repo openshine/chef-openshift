@@ -22,7 +22,7 @@ package "mongodb-server"
 ruby_block 'auth = true -> /etc/mongodb.conf' do
   block do
     f = Chef::Util::FileEdit.new('/etc/mongodb.conf')
-    f.search_file_replace("^auth *=.*$","auth = true")
+    f.search_file_replace("^auth *=.*$", "auth = true")
     f.insert_line_if_no_match("^auth *=.*$", "auth = true")
     f.write_file
   end
